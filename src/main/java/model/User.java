@@ -9,7 +9,7 @@ public class User extends Model {
 
     public User(){}
 
-    public User(String cnp, String name, LocalDate birthday, String mail, String phone, String bloodGroup, Integer weight){
+    public User(String cnp, String name, LocalDate birthday, String mail, String phone, String bloodGroup, Float weight){
         set("CNP",cnp);
         set("Name",name);
         set("Birthday",birthday);
@@ -44,7 +44,7 @@ public class User extends Model {
         return (String)get("BloodGroup");
     }
 
-    public Integer getWeight(){
-        return (Integer)get("Weight");
+    public Float getWeight(){
+        return (Float)get("Weight");
     }
 }
