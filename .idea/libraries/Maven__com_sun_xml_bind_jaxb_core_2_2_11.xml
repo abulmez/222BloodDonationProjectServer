@@ -2,6 +2,7 @@
   <library name="Maven: com.sun.xml.bind:jaxb-core:2.2.11">
     <CLASSES>
       <root url="jar://$MAVEN_REPOSITORY$/com/sun/xml/bind/jaxb-core/2.2.11/jaxb-core-2.2.11.jar!/" />
+      <root url="jar://$USER_HOME$/Desktop/sqljdbc_6.2/enu/mssql-jdbc-6.2.2.jre8.jar!/" />
     </CLASSES>
     <JAVADOC>
       <root url="jar://$MAVEN_REPOSITORY$/com/sun/xml/bind/jaxb-core/2.2.11/jaxb-core-2.2.11-javadoc.jar!/" />

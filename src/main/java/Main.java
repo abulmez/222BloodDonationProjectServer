@@ -12,20 +12,17 @@ public class Main {
     public static void main(String[] args){
         try {
 
-            System.out.println("Connected!");
 
-            String username = "test";
-            String password = "1234";
-            //List<UserLoginData> users = UserLoginData.where("Username = ? and Password = ? ",username,password);
-            //for(UserLoginData user:users){
-            //    System.out.println(user.getId()+" "+ user.getUserType());
-           // }
-            HttpServer server = HttpServer.create(new InetSocketAddress(8001), 0);
+
+            HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
             //Create the context for the server.
             server.createContext("/", new BaseHandler());
 
             server.setExecutor(null); // creates a default executor
+
             server.start();
+            System.out.println(server.getAddress());
+            System.out.println("Server started!");
 
 
         }
