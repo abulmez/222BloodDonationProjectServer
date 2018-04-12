@@ -22,11 +22,11 @@ public class BaseHandler implements HttpHandler {
             String response;
             if(user != null){
                 response = String.format("Id=%s&UserType=%s",user.getId(),user.getUserType());
-                t.sendResponseHeaders(300, response.length());
+                t.sendResponseHeaders(200, response.length());
             }
             else{
                 response = "nop";
-                t.sendResponseHeaders(200, response.length());
+                t.sendResponseHeaders(401, response.length());
             }
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());

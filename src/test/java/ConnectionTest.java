@@ -1,4 +1,5 @@
 import junit.framework.TestCase;
+import model.Donor;
 import model.User;
 import org.javalite.activejdbc.Base;
 
@@ -15,12 +16,12 @@ public class ConnectionTest extends TestCase {
 
     public void testUp(){
         User.deleteAll();
-        User u1 = new User("1212451","Tom", LocalDate.of(1995,1,12),"tom@mail.com","0745678991","A",(float)80);
+        User u1 = new Donor("1212451","Tom", LocalDate.of(1995,1,12),"tom@mail.com","0745678991","A",(float)80);
         u1.saveIt();
-        User u2 = new User("2314415","John",LocalDate.of(1978,2,3),"john@mail.com","0753111468","B",(float)150.6);
+        User u2 = new Donor("2314415","John",LocalDate.of(1978,2,3),"john@mail.com","0753111468","B",(float)150.6);
         u2.saveIt();
-        List<User> list = User.findAll();
-        for(User u:list){
+        List<Donor> list = Donor.findAll();
+        for(Donor u:list){
             System.out.println(u.getIdU()+" "+u.getName()+" "+u.getBirthday()+" "+u.getMail()+" "+u.getPhone()+" "+u.getBloodGroup()+" "+u.getWeight());
         }
     }

@@ -7,6 +7,8 @@ import org.javalite.activejdbc.annotations.Table;
 @Table("LoginData")
 public class UserLoginData extends Model {
 
+    public UserLoginData(){};
+
     public Integer getId(){
         return (Integer)get("IdLD");
     }

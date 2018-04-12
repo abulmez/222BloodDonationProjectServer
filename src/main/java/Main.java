@@ -1,17 +1,25 @@
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpServer;
-import model.User;
-import model.UserLoginData;
+import model.Donor;
 import org.javalite.activejdbc.Base;
+import org.javalite.activejdbc.LazyList;
 import request.BaseHandler;
 
+import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.time.LocalDate;
-import java.util.List;
+import java.util.ArrayList;
 
 public class Main {
     public static void main(String[] args){
         try {
 
+
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            System.out.println("Connected!");
 
 
             HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
