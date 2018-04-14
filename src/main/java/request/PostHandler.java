@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import model.*;
 import model.BloodDemand;
 import model.JsonHelper;
+import model.Medic;
 import model.UserLoginData;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
@@ -275,9 +276,20 @@ public class PostHandler {
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
 
-            String idH = reader.readLine();
-            System.out.println(idH);
-            LazyList<BloodDemand> list=BloodDemand.where("IdH = ?",Integer.parseInt(idH));
+            String id = reader.readLine();
+            System.out.println(id);
+            Integer idM=Integer.parseInt(id);
+            LazyList<Medic> m=Medic.findAll();
+            Integer idH=0;
+
+            for(Medic mu:m){
+                System.out.println(m.get(0).getIdU());
+                if(mu.getIdU().equals(idM))
+                    idH=mu.getIdH();
+            }
+            if(idH==0)
+                return null;
+            LazyList<BloodDemand> list=BloodDemand.where("IdH = ?",idH);
             if(list.size()==0)
                 return null;
             return list;
