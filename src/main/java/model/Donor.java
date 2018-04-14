@@ -22,4 +22,14 @@ public class Donor extends User {
     public Float getWeight(){
         return (Float)get("Weight");
     }
+
+    public Integer getIdA(){return (Integer)get("IdA");}
+
+    public String getMail(){return (String)get("Mail");}
+
+    public String getPhone(){return (String)get("Phone");}
+
+    public void setIdA(Integer idA){
+        set("IdA", idA);
+    }
 }
