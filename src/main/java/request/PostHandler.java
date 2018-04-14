@@ -139,12 +139,13 @@ public class PostHandler {
             String[] params = line.split("&");
             String idU = params[0].split("=")[1];
             List<Donor> donors = Donor.where("IdU=?", idU);
-            //int idA = donors.get(0).getIdA();
+            List<UserLoginData> users = UserLoginData.where("IdLD=?", idU);
             List<Adress> adresses = Adress.where("IdA=?",donors.get(0).getIdA() );
             if (adresses.size() != 0) {
                 Donor d=donors.get(0);
+                UserLoginData uld=users.get(0);
                 Adress a = adresses.get(0);
-                String urlParameters = String.format("street=%s&streetNr=%s&blockNr=%s&nr=%s&entrance=%s&floor=%s&apartNr=%s&city=%s&county=%s&country=%s&weight=%s&phone=%s&mail=%s",Float.toString(d.getWeight()),d.getPhone(),d.getMail(),"1",a.getStreet(),Integer.toString(a.getStreetNr()),Integer.toString(a.getBlock()),a.getEntrance(),Integer.toString(a.getFloor()),Integer.toString(a.getApartNr()),a.getCity(),a.getCounty(),a.getCountry());
+                String urlParameters = String.format("street=%s&streetNr=%s&blockNr=%s&nr=%s&entrance=%s&floor=%s&apartNr=%s&city=%s&county=%s&country=%s&weight=%s&phone=%s&mail=%s&cnp=%s&nume=%s&date=%s&sange=%s&user=%s",Float.toString(d.getWeight()),d.getPhone(),d.getMail(),"1",a.getStreet(),Integer.toString(a.getStreetNr()),Integer.toString(a.getBlock()),a.getEntrance(),Integer.toString(a.getFloor()),Integer.toString(a.getApartNr()),a.getCity(),a.getCounty(),a.getCountry(),d.getCNP(),d.getName(),d.getBirthday(),d.getBloodGroup(),uld.getUsername());
                 return urlParameters;
             }
             else {

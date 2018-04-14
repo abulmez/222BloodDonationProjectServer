@@ -13,6 +13,10 @@ public class UserLoginData extends Model {
         return (Integer)get("IdLD");
     }
 
+    public String getUsername(){
+        return (String)get("Username");
+    }
+
     public String getUserType(){
         return (String)get("UserType");
     }
