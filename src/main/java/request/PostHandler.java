@@ -10,10 +10,8 @@ import model.UserLoginData;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class PostHandler {
@@ -147,12 +145,12 @@ public class PostHandler {
             if (adresses.size() != 0) {
                 Donor d=donors.get(0);
                 Adress a = adresses.get(0);
-                String urlParameters = String.format("street=%s&streetNr=%s&blockNr=%s&nr=%s&entrance=%s&floor=%s&apartNr=%s&city=%s&county=%s&country=%s&weight=%s&phone=%s&mail=%s",Float.toString(d.getWeight()),d.getPhone(),d.getMail(),"1",a.getStreet(),Integer.toString(a.getStreetNr()),Integer.toString(a.getBlock()),a.getEntrance(),Integer.toString(a.getFloor()),Integer.toString(a.getApartNr()),a.getCity(),a.getCounty(),a.getCountry());
+                String urlParameters = String.format("street=%s&streetNr=%s&blockNr=%s&nr=%s&entrance=%s&floor=%s&apartNr=%s&city=%s&county=%s&country=%s&weight=%s&phone=%s&mail=%s",Double.toString(d.getWeight()),d.getPhone(),d.getMail(),"1",a.getStreet(),Integer.toString(a.getStreetNr()),Integer.toString(a.getBlock()),a.getEntrance(),Integer.toString(a.getFloor()),Integer.toString(a.getApartNr()),a.getCity(),a.getCounty(),a.getCountry());
                 return urlParameters;
             }
             else {
                 Donor d=donors.get(0);
-                String urlParameters=String.format("a=%s&b=%s&c=%s&d=%s",Float.toString(d.getWeight()),d.getPhone(),d.getMail(),"0");
+                String urlParameters=String.format("a=%s&b=%s&c=%s&d=%s",Double.toString(d.getWeight()),d.getPhone(),d.getMail(),"0");
                 return urlParameters;
             }
 

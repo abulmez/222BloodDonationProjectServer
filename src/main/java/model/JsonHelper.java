@@ -1,6 +1,8 @@
 package model;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 import java.io.IOException;
 import java.util.Map;
