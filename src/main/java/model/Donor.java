@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Table("Users")
 public class Donor extends User {
 
-    public Donor(){};
+    public Donor(){ }
 
     public Donor(String cnp, String name, LocalDate birthday, String mail, String phone, String bloodGroup, Float weight){
         super(cnp,name,birthday,mail,phone);
@@ -19,7 +19,7 @@ public class Donor extends User {
         return (String)get("BloodGroup");
     }
 
-    public Float getWeight(){
-        return (Float)get("Weight");
+    public Double getWeight(){
+        return Double.parseDouble(get("Weight").toString());
     }
 }
