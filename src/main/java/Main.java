@@ -29,9 +29,9 @@ public class Main {
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             System.out.println("Connected!");
-            LazyList<Medic> d = Medic.findAll();
+            /*LazyList<Medic> d = Medic.findAll();
             LazyList<UserLoginData> l2 = UserLoginData.findAll();
-            System.out.println(d.size());
+            System.out.println(d.size());*/
 
             HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
             //Create the context for the server.
