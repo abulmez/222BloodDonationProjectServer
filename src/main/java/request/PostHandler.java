@@ -8,6 +8,7 @@ import org.javalite.activejdbc.Base;
 import javax.xml.ws.soap.Addressing;
 import java.io.*;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -68,18 +69,14 @@ public class PostHandler {
             String[] params = line.split("&");
             String additional = params[0].split("=")[1];
             String idU = params[1].split("=")[1];
-            System.out.println(idU);
-            System.out.println(additional);
             List<SuffersOf> suf=SuffersOf.where("IdU=?",idU);
             long nr =Illness.count();
             int i=(int) nr;
-            System.out.println(suf.size());
-            if (suf.get(suf.size()-1).getIdI()<15){
+            if (suf.size() == 0 || suf.get(suf.size()-1).getIdI()<15){
                 Illness ill=new Illness();
                 ill.setIdI(i+1);
                 ill.setName("Suplimentar");
                 ill.setDescription(additional);
-                System.out.println(2);
                 ill.saveIt();
                 SuffersOf s=new SuffersOf();
                 s.setIdI(i+1);
@@ -93,6 +90,30 @@ public class PostHandler {
         } catch (IOException e) {
             e.printStackTrace();
 
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String diseasesChecksHandler(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String idU = params[0].split("=")[1];
+            List<SuffersOf> suf=SuffersOf.where("IdU=?",idU);
+            List<Integer> list=new ArrayList<>();
+            Gson gson = new Gson();
+            for (SuffersOf s:suf){
+                list.add(s.getIdI());
+            }
+            String transfer=gson.toJson(list);
+            return transfer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
         } finally {
             Base.close();
         }
@@ -141,16 +162,26 @@ public class PostHandler {
             List<Donor> donors = Donor.where("IdU=?", idU);
             List<UserLoginData> users = UserLoginData.where("IdLD=?", idU);
             List<Adress> adresses = Adress.where("IdA=?",donors.get(0).getIdA() );
+            List<SuffersOf> suf=SuffersOf.where("IdU=?",idU);
+            Donor d=donors.get(0);
+            UserLoginData uld=users.get(0);
             if (adresses.size() != 0) {
-                Donor d=donors.get(0);
-                UserLoginData uld=users.get(0);
                 Adress a = adresses.get(0);
-                String urlParameters = String.format("street=%s&streetNr=%s&blockNr=%s&nr=%s&entrance=%s&floor=%s&apartNr=%s&city=%s&county=%s&country=%s&weight=%s&phone=%s&mail=%s&cnp=%s&nume=%s&date=%s&sange=%s&user=%s",Float.toString(d.getWeight()),d.getPhone(),d.getMail(),"1",a.getStreet(),Integer.toString(a.getStreetNr()),Integer.toString(a.getBlock()),a.getEntrance(),Integer.toString(a.getFloor()),Integer.toString(a.getApartNr()),a.getCity(),a.getCounty(),a.getCountry(),d.getCNP(),d.getName(),d.getBirthday(),d.getBloodGroup(),uld.getUsername());
-                return urlParameters;
+                if (suf.size()!=0 && suf.get(suf.size()-1).getIdI()>=15)
+                  {
+                    int idI=suf.get(suf.size()-1).getIdI();
+                    List<Illness> illnesses=Illness.where("IdI=?",idI);
+                    Illness i=illnesses.get(0);
+                    String urlParameters = String.format("street=%s&streetNr=%s&blockNr=%s&nr=%s&entrance=%s&floor=%s&apartNr=%s&city=%s&county=%s&country=%s&weight=%s&phone=%s&mail=%s&cnp=%s&nume=%s&date=%s&sange=%s&user=%s&nr=%s&desc=%s", d.getCNP(), d.getName(), d.getBirthday(), d.getBloodGroup(), uld.getUsername(), Float.toString(d.getWeight()), d.getPhone(), d.getMail(), "1", a.getStreet(), Integer.toString(a.getStreetNr()), Integer.toString(a.getBlock()), a.getEntrance(), Integer.toString(a.getFloor()), Integer.toString(a.getApartNr()), a.getCity(), a.getCounty(), a.getCountry(),"2", i.getDescription());
+                    return urlParameters;
+                }
+                else{
+                    String urlParameters = String.format("street=%s&streetNr=%s&blockNr=%s&nr=%s&entrance=%s&floor=%s&apartNr=%s&city=%s&county=%s&country=%s&weight=%s&phone=%s&mail=%s&cnp=%s&nume=%s&date=%s&sange=%s&user=%s&nr=%s",d.getCNP(), d.getName(), d.getBirthday(), d.getBloodGroup(), uld.getUsername(), Float.toString(d.getWeight()), d.getPhone(), d.getMail(), "1", a.getStreet(), Integer.toString(a.getStreetNr()), Integer.toString(a.getBlock()), a.getEntrance(), Integer.toString(a.getFloor()), Integer.toString(a.getApartNr()), a.getCity(), a.getCounty(), a.getCountry(), d.getCNP(), d.getName(), d.getBirthday(), d.getBloodGroup(), uld.getUsername(),"1");
+                    return urlParameters;
+                }
             }
             else {
-                Donor d=donors.get(0);
-                String urlParameters=String.format("a=%s&b=%s&c=%s&d=%s",Float.toString(d.getWeight()),d.getPhone(),d.getMail(),"0");
+                String urlParameters=String.format("cnp=%s&nume=%s&date=%s&sange=%s&user=%s&a=%s&b=%s&c=%s&d=%s",d.getCNP(), d.getName(), d.getBirthday(), d.getBloodGroup(), uld.getUsername(),Float.toString(d.getWeight()),d.getPhone(),d.getMail(),"0");
                 return urlParameters;
             }
 
