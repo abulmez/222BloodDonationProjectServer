@@ -49,7 +49,9 @@ public class PostHandler {
             String line=reader.readLine();
             BloodDemand bd = new BloodDemand();
             String[] argumente = line.split("&");
-            Integer idH=Integer.parseInt(argumente[0].split("=")[1]);
+            Integer idM=Integer.parseInt(argumente[0].split("=")[1]);
+            LazyList<Medic> m=Medic.where("IdU = ?",idM);
+            Integer idH=m.get(0).getIdH();
             String neededType=argumente[1].split("=")[1];
             String description=argumente[2].split("=")[1];
             String priority=argumente[3].split("=")[1];
@@ -73,14 +75,16 @@ public class PostHandler {
             String line = reader.readLine();
             System.out.println("Intra aici si imi afiseaza "+line);
             String[] argumente = line.split("&");
+            Integer idM=Integer.parseInt(argumente[1].split("=")[1]);
+            LazyList<Medic> m=Medic.where("IdU = ?",idM);
+            Integer idH=m.get(0).getIdH();
             List<BloodDemand> list = BloodDemand.where("idH = ?",Integer.parseInt(argumente[1].split("=")[1]));
             if(list==null){
                 System.out.println("Intra aicisaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 return 2;}
             System.out.println("Face update-ul!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            String updateString=argumente[1].split("=")[0]+" = ?, " +argumente[2].split("=")[0] + " = ?, " +
+            String updateString="IdH = ?, " +argumente[2].split("=")[0] + " = ?, " +
                     argumente[3].split("=")[0] +" = ?, " + argumente[4].split("=")[0] +" = ?, " + argumente[5].split("=")[0]+" = ?";
-            Integer idH=Integer.parseInt(argumente[1].split("=")[1]);
             String neededType=argumente[2].split("=")[1];
             String description=argumente[3].split("=")[1];
             String priority=argumente[4].split("=")[1];
