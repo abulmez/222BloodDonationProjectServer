@@ -7,7 +7,7 @@ import java.time.LocalDate;
 @Table("dbo.Users")
 public class Donor extends User {
 
-    public Donor(){}
+    public Donor(){};
 
     public Donor(String cnp, String name, LocalDate birthday, String mail, String phone, String bloodGroup, Double weight){
         super(cnp,name,birthday,mail,phone);
