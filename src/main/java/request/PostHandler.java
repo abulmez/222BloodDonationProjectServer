@@ -74,4 +74,28 @@ public class PostHandler {
         }
 
     }
+
+    public static String modifyDonationHandler(InputStream in) {
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String status = params[0].split("=")[1];
+            Integer idD =Integer.parseInt( params[1].split("=")[1]);
+            Donation donation=Donation.findFirst("IdD = ?",idD);
+            donation.set("Status",status);
+        //    donation.saveIt();
+            Base.exec("UPDATE Donation SET Status = ? WHERE IdD = ?",status,donation.getIdD());
+            return "Success";
+
+        } catch (Exception e) {
+            return e.getMessage();
+        }
+        finally {
+            Base.close();
+        }
+
+    }
 }
