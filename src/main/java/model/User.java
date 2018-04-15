@@ -40,5 +40,8 @@ public abstract class User extends Model {
         return (String)get("Phone");
     }
 
+    public String getCNP(){return (String)get("CNP");}
+
+
 
 }
