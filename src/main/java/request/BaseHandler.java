@@ -149,7 +149,6 @@ public class BaseHandler implements HttpHandler {
         }
 
 
-        t.close();
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonations")){
             List<DonationDTO> donations=GetHandler.donationsHandler();
@@ -195,6 +194,9 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
+
+
+        t.close();
 
     }
 

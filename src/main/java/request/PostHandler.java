@@ -4,22 +4,15 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.*;
 import model.BloodDemand;
-import model.JsonHelper;
 import model.Medic;
 import model.Donation;
 import model.Donor;
-import model.TCP;
 import model.UserLoginData;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
-import utils.DTOutils;
-import utils.DonationDTO;
-
-import javax.xml.ws.soap.Addressing;
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class PostHandler {

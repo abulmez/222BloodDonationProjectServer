@@ -1,9 +1,6 @@
 
 import com.sun.net.httpserver.HttpServer;
-import model.Donor;
-import model.Medic;
-import model.User;
-import model.UserLoginData;
+import model.*;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
@@ -30,8 +27,14 @@ public class Main {
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             System.out.println("Connected!");
             LazyList<Medic> d = Medic.findAll();
-            LazyList<UserLoginData> l2 = UserLoginData.findAll();
             System.out.println(d.size());
+            LazyList<UserLoginData> l2 = UserLoginData.findAll();
+            System.out.println(l2.size());
+            LazyList<Donation> l3 = Donation.findAll();
+            System.out.println(l3.size());
+            LazyList<TCP> l4 = TCP.findAll();
+            System.out.println(l4.size());
+
 
             HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
             //Create the context for the server.
