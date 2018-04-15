@@ -107,6 +107,14 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/diseasesChecks")){
+            String response=PostHandler.diseasesChecksHandler(t.getRequestBody());
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/userUpdate")){
             PostHandler.userUpdateHandler(t.getRequestBody());
             String response="raspuns";

@@ -29,6 +29,7 @@ public class Donor extends User {
 
     public String getPhone(){return (String)get("Phone");}
 
+
     public void setIdA(Integer idA){
         set("IdA", idA);
     }
