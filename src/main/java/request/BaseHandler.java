@@ -206,6 +206,8 @@ public class BaseHandler implements HttpHandler {
 
             if(donationCenters.size() != 0){
                 response=donationCenters.toJson(true);
+                System.out.println("DONATION CENTERS");
+                System.out.println(response);
                 t.sendResponseHeaders(200,response.length());
             }
             else {
@@ -224,6 +226,8 @@ public class BaseHandler implements HttpHandler {
 
             if(donationSchedules.size() != 0){
                 response=donationSchedules.toJson(true);
+                System.out.println("==========");
+                System.out.println(response);
                 t.sendResponseHeaders(200,response.length());
             }
             else {
@@ -236,6 +240,19 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateDonationScheduleStatus")){
+            String response=PostHandler.statusDonationScheduleUpdateHandler(t.getRequestBody());
+            //String response="raspuns";
+            if(response == "Success"){
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                t.sendResponseHeaders(401, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
 
         t.close();
     }

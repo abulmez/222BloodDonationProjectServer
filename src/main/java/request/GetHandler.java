@@ -19,6 +19,7 @@ import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
 public class GetHandler {
+
     public static List<DonationDTO> donationsHandler() {
         try {
             Base.open(
@@ -37,36 +38,40 @@ public class GetHandler {
     }
 
 
-    public static LazyList<DonationCenter> donationCentersHandler() {
+    public static LazyList<DonationCenter> donationCentersHandler(){
         try {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             LazyList<DonationCenter> donationCenters = DonationCenter.findAll();
-            System.out.println("Donation Center size:" + donationCenters.size());
+            System.out.println("Donation Center size:"+donationCenters.size());
+            for(DonationCenter dc : donationCenters){
+                System.out.println(dc.getCenterName());
+            }
             return donationCenters;
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             return null;
-        } finally {
+        }
+        finally {
             Base.close();
         }
     }
 
-    public static LazyList<DonationSchedule> donationSchedulesHandler() {
+    public static LazyList<DonationSchedule> donationSchedulesHandler(){
         try {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             LazyList<DonationSchedule> donationSchedules = DonationSchedule.findAll();
-            System.out.println("Donation Schedule size: " + donationSchedules.size());
+            System.out.println("Donation Schedule size: "+donationSchedules.size());
             return donationSchedules;
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             return null;
-        } finally {
+        }
+        finally {
             Base.close();
         }
     }
 }
-
