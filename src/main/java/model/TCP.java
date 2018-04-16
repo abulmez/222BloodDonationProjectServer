@@ -4,7 +4,7 @@ import org.javalite.activejdbc.annotations.Table;
 
 import java.time.LocalDate;
 
-@Table("dbo.Users")
+
 public class TCP extends User {
     public TCP(){};
 
