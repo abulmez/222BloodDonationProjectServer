@@ -13,6 +13,9 @@ public class GetHandler {
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             LazyList<DonationCenter> donationCenters = DonationCenter.findAll();
             System.out.println("Donation Center size:"+donationCenters.size());
+            for(DonationCenter dc : donationCenters){
+                System.out.println(dc.getCenterName());
+            }
             return donationCenters;
         }catch (Exception e){
             e.printStackTrace();

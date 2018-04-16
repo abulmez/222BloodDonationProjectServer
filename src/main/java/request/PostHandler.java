@@ -44,6 +44,29 @@ public class PostHandler {
         }
     }
 
+    public static String statusDonationScheduleUpdateHandler(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String idDS = params[0].split("=")[1];
+            String idDC = params[1].split("=")[1];
+            String status = params[2].split("=")[1];
+            System.out.println(idDS+" "+idDC+" "+status);
+            //// AICI
+            Base.exec("Update DonationSchedule Set Status = ? Where IdDS = ? and IdDC = ?",status,idDS,idDC);
+            return "Success";
+        }
+        catch (Exception e) {
+            return e.getMessage();
+
+        } finally {
+            Base.close();
+        }
+    }
+
     public static void userUpdateHandler(InputStream in) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Base.open(
