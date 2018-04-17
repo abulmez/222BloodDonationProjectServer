@@ -32,6 +32,16 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
+        if(t.getRequestHeaders().getFirst("Content-type").equals("application/register"))
+        {
+            Integer resisterResult = PostHandler.registerHandler(t.getRequestBody());
+            String response;
+            response = "niceString!";
+            t.sendResponseHeaders(resisterResult, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addBloodDemand")){
             BloodDemand demand=PostHandler.addDemandHandler(t.getRequestBody());

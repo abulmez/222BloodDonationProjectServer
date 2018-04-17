@@ -3,18 +3,13 @@ package request;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.*;
-import model.BloodDemand;
-import model.JsonHelper;
-import model.Medic;
-import model.UserLoginData;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
-import javax.xml.ws.soap.Addressing;
 import java.io.*;
 import java.lang.reflect.Type;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 public class PostHandler {
@@ -42,6 +37,58 @@ public class PostHandler {
         } finally {
             Base.close();
         }
+    }
+    public  static Integer registerHandler(InputStream in ){
+        Base.open(
+                "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+        Integer id = null;
+        try{
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
+            String line = reader.readLine();
+            String[] parameters = line.split("%1%1%");
+
+            UserLoginData userLoginData = new UserLoginData();
+            String userLoginDataString = parameters[0];
+            userLoginData.fromMap(JsonHelper.toMap(userLoginDataString));
+
+            Donor donor = new Donor();
+            String donorString = parameters[1];
+            donor.fromMap(JsonHelper.toMap(donorString));
+            User donorFinal = new Donor(donor.getCNP(),donor.getName(), LocalDate.of(1911,12,13),donor.getMail(),donor.getPhone(),donor.getBloodGroup(),donor.getWeight());
+            LazyList<Donor> listDonor =Donor.where("CNP = ? AND Mail = ?",donor.getCNP(),donor.getMail());
+            if(listDonor.size()>0){
+                return 409;
+            }
+            else{
+                LazyList<UserLoginData> listUser= UserLoginData.where("Username = ? and UserType = ?",userLoginData.getUsername(),userLoginData.getUserType());
+                if (listUser.size()>0)
+                    return 409;
+                else {
+                   if(donorFinal.saveIt()) {
+                       LazyList<Donor> list = Donor.where("CNP = ?",donorFinal.getCNP());
+                       for (Donor donor1:list) {
+                           id=donor1.getIdU();
+                       }
+
+                       UserLoginData fianlUser = new UserLoginData();
+                       fianlUser.set("Username",userLoginData.getUsername());
+                       fianlUser.set("Password",userLoginData.getPassword());
+                       fianlUser.set("UserType",userLoginData.getUserType());
+                       fianlUser.setId(id);
+                       fianlUser.insert();
+                       return 201;
+
+                   }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 401;
+        }
+        System.out.print("Aiciex1");
+        return 401;
+
     }
 
     public static void userUpdateHandler(InputStream in) {
