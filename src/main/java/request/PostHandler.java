@@ -301,11 +301,11 @@ public class PostHandler {
             String line = reader.readLine();
             String[] params = line.split("&");
             String name = params[0].split("=")[1];
-            Integer idU=Integer.parseInt(params[1].split("=")[1]);
+            String cnp=params[1].split("=")[1];
             String status=params[2].split("=")[1];
             Double quantity=Double.parseDouble(params[3].split("=")[1]);
-            Donor user=Donor.findFirst("IdU = ?",idU);
-            Donation donation= Donation.create("IdDC",user.get("IdDC"),"Quantity",quantity,"Status",status,"IdU",idU);
+            Donor user=Donor.findFirst("CNP = ?",cnp);
+            Donation donation= Donation.create("IdDC",user.get("IdDC"),"Quantity",quantity,"Status",status,"IdU",user.getIdU());
             if(donation.save()){
                 return "Success";
             }

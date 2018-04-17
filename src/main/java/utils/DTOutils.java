@@ -11,7 +11,8 @@ import java.util.List;
 public class DTOutils {
     public static DonationDTO getDTO(Donation donation){
         Donor user=Donor.findFirst("IdU = ?",donation.getIdU());
-        DonationDTO dto=new DonationDTO(donation.getIdD(),user.getName(),donation.getIdU(),donation.getStatus(),donation.getQuantity());
+        System.out.println(user.get("CNP"));
+        DonationDTO dto=new DonationDTO(donation.getIdD(),user.getName(),donation.getIdU(),user.get("cnp").toString(),donation.getStatus(),donation.getQuantity());
         return dto;
     }
 
