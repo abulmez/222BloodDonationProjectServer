@@ -3,6 +3,8 @@ package request;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
+import model.DonationCenter;
+import model.DonationSchedule;
 import model.BloodDemand;
 import model.Donation;
 import model.Donor;
@@ -205,9 +207,63 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonationCenter")){
+            LazyList<DonationCenter> donationCenters = GetHandler.donationCentersHandler();
+            for(DonationCenter dc:donationCenters){
+                System.out.println(dc.getCenterName());
+            }
+            String response;
+
+            if(donationCenters.size() != 0){
+                response=donationCenters.toJson(true);
+                System.out.println("DONATION CENTERS");
+                System.out.println(response);
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonationSchedule")){
+            LazyList<DonationSchedule> donationSchedules = GetHandler.donationSchedulesHandler();
+            String response;
+
+            if(donationSchedules.size() != 0){
+                response=donationSchedules.toJson(true);
+                System.out.println("==========");
+                System.out.println(response);
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateDonationScheduleStatus")){
+            String response=PostHandler.statusDonationScheduleUpdateHandler(t.getRequestBody());
+            //String response="raspuns";
+            if(response == "Success"){
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                t.sendResponseHeaders(401, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
 
         t.close();
-
     }
-
 }
