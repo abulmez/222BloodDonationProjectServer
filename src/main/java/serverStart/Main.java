@@ -1,3 +1,4 @@
+package serverStart;
 
 import com.sun.net.httpserver.HttpServer;
 import model.*;
@@ -32,6 +33,8 @@ public class Main {
             System.out.println(l2.size());
             LazyList<Donation> l3 = Donation.findAll();
             System.out.println(l3.size());
+            LazyList<BloodDemand> l4 = BloodDemand.findAll();
+            System.out.println(l4.size());
 
             LazyList<Donor> l5 = Donor.findAll();
             System.out.println(l5.size());
