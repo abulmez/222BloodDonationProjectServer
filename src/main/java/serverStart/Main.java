@@ -35,6 +35,8 @@ public class Main {
             System.out.println(l3.size());
             LazyList<BloodDemand> l4 = BloodDemand.findAll();
             System.out.println(l4.size());
+            LazyList<Adress> l6 = Adress.findAll();
+            System.out.println(l6.size());
 
             LazyList<Donor> l5 = Donor.findAll();
             System.out.println(l5.size());

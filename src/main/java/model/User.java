@@ -28,7 +28,9 @@ public abstract class User extends Model {
     }
 
     public LocalDate getBirthday(){
-        return (LocalDate)get("Birthday");
+
+        Date date = (Date)get("Birthday");
+        return date.toLocalDate();
     }
 
     public String getMail(){
