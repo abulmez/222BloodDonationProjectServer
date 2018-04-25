@@ -31,5 +31,6 @@
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-mapper-asl:1.9.13" level="project" />
     <orderEntry type="library" name="Maven: org.codehaus.jackson:jackson-core-asl:1.9.13" level="project" />
     <orderEntry type="library" name="mssql-jdbc-6.4.0.jre9" level="project" />
+    <orderEntry type="library" name="mssql-jdbc-6.2.2.jre84" level="project" />
   </component>
 </module>
