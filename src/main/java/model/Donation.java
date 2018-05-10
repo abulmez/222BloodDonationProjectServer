@@ -28,8 +28,8 @@ public class Donation extends Model {
         return (Integer)get("IdU");
     }
 
-    public Double getQuantity(){
-        return (Double)get("Quantity");
+    public double getQuantity(){
+        return Double.parseDouble(get("Quantity").toString());
     }
 
     public String getStatus(){
