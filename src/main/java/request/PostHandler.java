@@ -500,7 +500,7 @@ public class PostHandler {
 
             String nume=e.getDescription();
             e.delete();
-            return "Cererea cu id-ul: "+idBd+"pentru pacientul: "+nume+" a fost stearsa";
+            return "Cererea cu id-ul: "+idBd+" pentru pacientul: "+nume+" a fost stearsa";
         }catch(Exception e){
             e.printStackTrace();
             return null;
@@ -522,7 +522,7 @@ public class PostHandler {
                     "AND AvailableBloodProducts.IdD=Donation.IdD AND Donation.IdDC=DonationCenter.IdDC AND BloodDemand.IdBd="+idBd);
             String centre="Centrele de la care s-au primit donatii: ";
             for(DonationCenter dc : donations){
-                centre=centre+dc.getCenterName()+", ";
+                centre=centre+dc.getCenterName()+", "+dc.getPhoneNumber()+"; ";
             }
             centre=centre.substring(0, centre.length()-2);
             return centre;
