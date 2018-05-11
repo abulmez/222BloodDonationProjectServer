@@ -8,6 +8,7 @@ import model.DonationSchedule;
 import model.BloodDemand;
 import model.Donation;
 import model.Donor;
+import model.BloodDemandDTO;
 import model.UserLoginData;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.LazyList;
@@ -54,9 +55,8 @@ public class BaseHandler implements HttpHandler {
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addBloodDemand")){
             BloodDemand demand=PostHandler.addDemandHandler(t.getRequestBody());
             String response;
-            System.out.println("Aici mai fac un debug ca innebunesc plm: "+demand.getDescription());
             if(demand!=null){
-                response=String.format("Cererea cu id-ul "+demand.getIdBd()+" a fost inregistrata");
+                response=String.format("Cererea pentru pacientul "+demand.getDescription()+" a fost inregistrata");
                 t.sendResponseHeaders(200,response.length());
             }
             else{
@@ -91,16 +91,95 @@ public class BaseHandler implements HttpHandler {
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/findBloodDemands")){
 
-            LazyList<BloodDemand> list=PostHandler.findDemands(t.getRequestBody());
+            List<BloodDemandDTO> list=PostHandler.findDemands(t.getRequestBody());
             String response="";
             if(list!=null){
-                response=list.toJson(true);
+                Gson g=new Gson();
+                response=g.toJson(list);
 
                 t.sendResponseHeaders(200,response.length());
             }
             else
             {
                 response=String.format("Eroare la incarcarea tabelului");
+                t.sendResponseHeaders(422,response.length());
+            }
+            OutputStream os=t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/vizualizareBloodDemands")){
+
+            String list=PostHandler.vizualizareLivrariHandler(t.getRequestBody());
+            String response="";
+            if(list!=null){
+                response=String.format(list);
+
+                t.sendResponseHeaders(200,response.length());
+            }
+            else
+            {
+                response=String.format("Eroare la incarcarea tabelului");
+                t.sendResponseHeaders(422,response.length());
+            }
+            OutputStream os=t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/filtrarePlasateBloodDemands")){
+
+            List<BloodDemandDTO> list=PostHandler.cereriPlasateHandler(t.getRequestBody());
+            String response="";
+            if(list!=null){
+                Gson g=new Gson();
+                response=g.toJson(list);
+
+                t.sendResponseHeaders(200,response.length());
+            }
+            else
+            {
+                response=String.format("Eroare la incarcarea tabelului");
+                t.sendResponseHeaders(422,response.length());
+            }
+            OutputStream os=t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/filtrareLivrateBloodDemands")){
+
+            List<BloodDemandDTO> list=PostHandler.cereriLivrateHandler(t.getRequestBody());
+            String response="";
+            if(list!=null){
+                Gson g=new Gson();
+                response=g.toJson(list);
+
+                t.sendResponseHeaders(200,response.length());
+            }
+            else
+            {
+                response=String.format("Eroare la incarcarea tabelului");
+                t.sendResponseHeaders(422,response.length());
+            }
+            OutputStream os=t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/removeBloodDemand")){
+
+            String list=PostHandler.removeDemandHandler(t.getRequestBody());
+            String response="";
+            if(list!=null){
+                response=String.format(list);
+
+                t.sendResponseHeaders(200,response.length());
+            }
+            else
+            {
+                response=String.format("Eroare la stergere");
                 t.sendResponseHeaders(422,response.length());
             }
             OutputStream os=t.getResponseBody();

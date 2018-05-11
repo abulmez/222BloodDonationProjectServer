@@ -3,12 +3,18 @@ package request;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.*;
+import model.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +40,14 @@ public class PostHandler {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
-        } finally {
+        }
+        finally {
             Base.close();
         }
+
     }
+
+
     public  static Integer registerHandler(InputStream in ){
         Base.open(
                 "com.microsoft.sqlserver.jdbc.SQLServerDriver",
@@ -65,21 +75,21 @@ public class PostHandler {
                 if (listUser.size()>0)
                     return 409;
                 else {
-                   if(donorFinal.saveIt()) {
-                       LazyList<Donor> list = Donor.where("CNP = ?",donorFinal.getCNP());
-                       for (Donor donor1:list) {
-                           id=donor1.getIdU();
-                       }
+                    if(donorFinal.saveIt()) {
+                        LazyList<Donor> list = Donor.where("CNP = ?",donorFinal.getCNP());
+                        for (Donor donor1:list) {
+                            id=donor1.getIdU();
+                        }
 
-                       UserLoginData fianlUser = new UserLoginData();
-                       fianlUser.set("Username",userLoginData.getUsername());
-                       fianlUser.set("Password",userLoginData.getPassword());
-                       fianlUser.set("UserType",userLoginData.getUserType());
-                       fianlUser.setId(id);
-                       fianlUser.insert();
-                       return 201;
+                        UserLoginData fianlUser = new UserLoginData();
+                        fianlUser.set("Username",userLoginData.getUsername());
+                        fianlUser.set("Password",userLoginData.getPassword());
+                        fianlUser.set("UserType",userLoginData.getUserType());
+                        fianlUser.setId(id);
+                        fianlUser.insert();
+                        return 201;
 
-                   }
+                    }
                 }
             }
         } catch (Exception e) {
@@ -243,7 +253,7 @@ public class PostHandler {
             if (adresses.size() != 0) {
                 Adress a = adresses.get(0);
                 if (suf.size()!=0 && suf.get(suf.size()-1).getIdI()>=15)
-                  {
+                {
                     int idI=suf.get(suf.size()-1).getIdI();
                     List<Illness> illnesses=Illness.where("IdI=?",idI);
                     Illness i=illnesses.get(0);
@@ -268,7 +278,7 @@ public class PostHandler {
         }
     }
 
-        public static void adressHandler(InputStream in) {
+    public static void adressHandler(InputStream in) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
@@ -316,6 +326,7 @@ public class PostHandler {
         }
 
     }
+
     public static BloodDemand addDemandHandler(InputStream in){
         try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
             Base.open(
@@ -324,22 +335,23 @@ public class PostHandler {
             String line=reader.readLine();
             BloodDemand bd = new BloodDemand();
             String[] argumente = line.split("&");
-            Integer idH=Integer.parseInt(argumente[0].split("=")[1]);
+            Integer idU=Integer.parseInt(argumente[0].split("=")[1]);
+            LazyList<Medic> list1= Medic.where("IdU = ?",idU);
+            Integer idH=list1.get(0).getIdH();
             String neededType=argumente[1].split("=")[1];
             String description=argumente[2].split("=")[1];
             String priority=argumente[3].split("=")[1];
-            Integer quantity=Integer.parseInt(argumente[4].split("=")[1]);
-            bd.set("IdH", idH).set("NeededType", neededType).set("Description", description).set("Priority",priority).set("Quantity",quantity).saveIt();
+            Double quantity=Double.parseDouble(argumente[4].split("=")[1]);
+            String bloodType=argumente[5].split("=")[1];
+            bd.set("IdH", idH).set("NeededType", neededType).set("Description", description).set("Priority",priority).set("Quantity",quantity).set("BloodProductType",bloodType).saveIt();
             return bd;
         }catch(IOException e){
             e.printStackTrace();
             return null;
         }
-        finally {
-
+        finally{
             Base.close();
         }
-
     }
 
     public static String addDonationHandler(InputStream in) {
@@ -383,7 +395,7 @@ public class PostHandler {
             Integer idD =Integer.parseInt( params[1].split("=")[1]);
             Donation donation=Donation.findFirst("IdD = ?",idD);
             donation.set("Status",status);
-        //    donation.saveIt();
+            //    donation.saveIt();
             Base.exec("UPDATE Donation SET Status = ? WHERE IdD = ?",status,donation.getIdD());
             return "Success";
 
@@ -408,17 +420,20 @@ public class PostHandler {
                 System.out.println("Intra aicisaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
                 return 2;}
             System.out.println("Face update-ul!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            String updateString=argumente[1].split("=")[0]+" = ?, " +argumente[2].split("=")[0] + " = ?, " +
-                    argumente[3].split("=")[0] +" = ?, " + argumente[4].split("=")[0] +" = ?, " + argumente[5].split("=")[0]+" = ?";
-            Integer idH=Integer.parseInt(argumente[1].split("=")[1]);
+            String updateString="IdH = ?, " +argumente[2].split("=")[0] + " = ?, " +
+                    argumente[3].split("=")[0] +" = ?, " + argumente[4].split("=")[0] +" = ?, " + argumente[5].split("=")[0]+" = ?,"+argumente[6].split("=")[0]+" = ?";
+            Integer idU=Integer.parseInt(argumente[1].split("=")[1]);
+            LazyList<Medic> list1= Medic.where("IdU = ?",idU);
+            Integer idH=list1.get(0).getIdH();
             String neededType=argumente[2].split("=")[1];
             String description=argumente[3].split("=")[1];
             String priority=argumente[4].split("=")[1];
-            Integer quantity=Integer.parseInt(argumente[5].split("=")[1]);
+            Double quantity=Double.parseDouble(argumente[5].split("=")[1]);
+            String bloodType=argumente[6].split("=")[1];
             String[] conditie=argumente[0].split("=");
             String conditie1=conditie[0]+" = ?";
             Integer conditie2=Integer.parseInt(conditie[1]);
-            BloodDemand.update(updateString, conditie1,idH,neededType,description,priority,quantity,conditie2);
+            BloodDemand.update(updateString, conditie1,idH,neededType,description,priority,quantity,bloodType,conditie2);
             return 1;
 
         } catch (IOException e) {
@@ -429,29 +444,40 @@ public class PostHandler {
         }
     }
 
-    public static LazyList<BloodDemand> findDemands(InputStream in){
+    public static List<BloodDemandDTO> findDemands(InputStream in){
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
-
-            String id = reader.readLine();
-            System.out.println(id);
-            Integer idM=Integer.parseInt(id);
-            LazyList<Medic> m=Medic.findAll();
-            Integer idH=0;
-
-            for(Medic mu:m){
-                System.out.println(m.get(0).getIdU());
-                if(mu.getIdU().equals(idM))
-                    idH=mu.getIdH();
-            }
-            if(idH==0)
-                return null;
+            Double suma;
+            BloodDemandDTO dto;
+            List<BloodDemandDTO> listBD=new ArrayList<>();
+            String idU = reader.readLine();
+            LazyList<Medic> list1= Medic.where("IdU = ?",idU);
+            Integer idH=list1.get(0).getIdH();
             LazyList<BloodDemand> list=BloodDemand.where("IdH = ?",idH);
             if(list.size()==0)
                 return null;
-            return list;
+            for(BloodDemand d:list){
+                suma=0.0;
+                List<Donation> donations=Donation.findBySQL("SELECT Donation.* FROM BloodDemand, BloodProductsShippment" +
+                        ", AvailableBloodProducts, Donation WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
+                        "AND AvailableBloodProducts.IdD=Donation.IdD AND BloodDemand.IdBd="+d.getIdBd());
+
+
+                for(Donation don : donations){
+                    suma=suma+don.getQuantity();
+                }
+                if(Math.abs(suma-d.getQuantity())<=0.0000001)
+                    listBD.add(new BloodDemandDTO(d,suma,"Livrata"));
+                else if(!(suma.equals(0.0)))
+                    listBD.add(new BloodDemandDTO(d,suma,"Initiata"));
+                else
+                    listBD.add(new BloodDemandDTO(d,suma,"Plasata"));
+
+            }
+
+            return listBD;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -460,4 +486,139 @@ public class PostHandler {
             Base.close();
         }
     }
+
+    public static String removeDemandHandler(InputStream in){
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line=reader.readLine();
+
+            Integer idBd=Integer.parseInt(line.split("=")[1]);
+            BloodDemand e = BloodDemand.findFirst("IdBd = ?", idBd);
+
+
+            String nume=e.getDescription();
+            e.delete();
+            return "Cererea cu id-ul: "+idBd+"pentru pacientul: "+nume+" a fost stearsa";
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally{
+            Base.close();
+        }
+    }
+    public static String vizualizareLivrariHandler(InputStream in){
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line=reader.readLine();
+
+            Integer idBd=Integer.parseInt(line.split("=")[1]);
+            List<DonationCenter> donations=DonationCenter.findBySQL("SELECT DonationCenter.* FROM BloodDemand, BloodProductsShippment" +
+                    ", AvailableBloodProducts, Donation,DonationCenter WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
+                    "AND AvailableBloodProducts.IdD=Donation.IdD AND Donation.IdDC=DonationCenter.IdDC AND BloodDemand.IdBd="+idBd);
+            String centre="Centrele de la care s-au primit donatii: ";
+            for(DonationCenter dc : donations){
+                centre=centre+dc.getCenterName()+", ";
+            }
+            centre=centre.substring(0, centre.length()-2);
+            return centre;
+        }catch(Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally{
+            Base.close();
+        }
+    }
+
+    public static List<BloodDemandDTO> cereriPlasateHandler(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            Double suma;
+            BloodDemandDTO dto;
+            List<BloodDemandDTO> listBD=new ArrayList<>();
+            String idU = reader.readLine();
+            LazyList<Medic> list1= Medic.where("IdU = ?",idU);
+            Integer idH=list1.get(0).getIdH();
+            LazyList<BloodDemand> list=BloodDemand.where("IdH = ?",idH);
+            if(list.size()==0)
+                return null;
+            for(BloodDemand d:list){
+                suma=0.0;
+                List<Donation> donations=Donation.findBySQL("SELECT Donation.* FROM BloodDemand, BloodProductsShippment" +
+                        ", AvailableBloodProducts, Donation WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
+                        "AND AvailableBloodProducts.IdD=Donation.IdD AND BloodDemand.IdBd="+d.getIdBd());
+
+
+                for(Donation don : donations){
+                    suma=suma+don.getQuantity();
+                }
+                if(Math.abs(suma-d.getQuantity())<=0.0000001)
+                    continue;
+                else if(!(suma.equals(0.0)))
+                    listBD.add(new BloodDemandDTO(d,suma,"Initiata"));
+                else
+                    listBD.add(new BloodDemandDTO(d,suma,"Plasata"));
+
+            }
+
+            return listBD;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static List<BloodDemandDTO> cereriLivrateHandler(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            Double suma;
+            BloodDemandDTO dto;
+            List<BloodDemandDTO> listBD=new ArrayList<>();
+            String idU = reader.readLine();
+            LazyList<Medic> list1= Medic.where("IdU = ?",idU);
+            Integer idH=list1.get(0).getIdH();
+            LazyList<BloodDemand> list=BloodDemand.where("IdH = ?",idH);
+            if(list.size()==0)
+                return null;
+            for(BloodDemand d:list){
+                suma=0.0;
+                List<Donation> donations=Donation.findBySQL("SELECT Donation.* FROM BloodDemand, BloodProductsShippment" +
+                        ", AvailableBloodProducts, Donation WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
+                        "AND AvailableBloodProducts.IdD=Donation.IdD AND BloodDemand.IdBd="+d.getIdBd());
+
+
+                for(Donation don : donations){
+                    suma=suma+don.getQuantity();
+                }
+                if(Math.abs(suma-d.getQuantity())<=0.0000001)
+                    listBD.add(new BloodDemandDTO(d,suma,"Livrata"));
+
+
+            }
+
+            return listBD;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+
+
+
 }

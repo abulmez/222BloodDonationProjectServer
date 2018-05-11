@@ -1,20 +1,23 @@
 package model;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 @Table("BloodDemand")
+@IdName("IdBd")
 public class BloodDemand extends Model {
     public BloodDemand(){};
 
     public BloodDemand(Integer idBd, Integer idH, String neededType,String description,
-                       String priority,Integer quantity) {
+                       String priority,Double quantity,String bloodProduct) {
         set("IdBd",idBd);
         set("IdH",idH);
         set("NeededType",neededType);
         set("Description",description);
         set("Priority",priority);
         set("Quantity",quantity);
+        set("BloodProductType",bloodProduct);
     }
 
     public Integer getIdBd(){
@@ -37,7 +40,9 @@ public class BloodDemand extends Model {
         return (String)get("Priority");
     }
 
-    public Integer getQuantity(){
-        return (Integer)get("Quantity");
+    public Double getQuantity(){
+        return Double.parseDouble(get("Quantity").toString());
     }
+
+    public String getBloodProductType(){return (String)get("BloodProductType");}
 }
