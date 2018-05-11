@@ -3,7 +3,6 @@ package request;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.*;
-import model.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
@@ -15,7 +14,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
 import java.util.List;
 
 public class PostHandler {
@@ -66,7 +64,7 @@ public class PostHandler {
             String donorString = parameters[1];
             donor.fromMap(JsonHelper.toMap(donorString));
             User donorFinal = new Donor(donor.getCNP(),donor.getName(), LocalDate.of(1911,12,13),donor.getMail(),donor.getPhone(),donor.getBloodGroup(),donor.getWeight());
-            LazyList<Donor> listDonor =Donor.where("CNP = ? AND Mail = ?",donor.getCNP(),donor.getMail());
+            LazyList<Donor> listDonor = Donor.where("CNP = ? AND Mail = ?",donor.getCNP(),donor.getMail());
             if(listDonor.size()>0){
                 return 409;
             }
@@ -295,7 +293,7 @@ public class PostHandler {
             String county = params[7].split("=")[1];
             String country = params[8].split("=")[1];
             String idU=params[9].split("=")[1];
-            List<Donor> donors=Donor.where("IdU=?",idU);
+            List<Donor> donors= Donor.where("IdU=?",idU);
             Adress a=new Adress();
             if (donors.size() != 0) {
                 if (donors.get(0).getIdA()==null){
@@ -365,7 +363,7 @@ public class PostHandler {
             String cnp=params[1].split("=")[1];
             String status=params[2].split("=")[1];
             Double quantity=Double.parseDouble(params[3].split("=")[1]);
-            Donor user=Donor.findFirst("CNP = ?",cnp);
+            Donor user= Donor.findFirst("CNP = ?",cnp);
             Donation donation= Donation.create("IdDC",user.get("IdDC"),"Quantity",quantity,"Status",status,"IdU",user.getIdU());
             if(donation.save()){
                 return "Success";

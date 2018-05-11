@@ -5,6 +5,7 @@ import org.javalite.activejdbc.annotations.Table;
 import java.time.LocalDate;
 
 
+@Table("Users ")
 public class TCP extends User {
     public TCP(){};
 

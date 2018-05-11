@@ -1,19 +1,17 @@
 package serverStart;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpServer;
 import model.*;
-import org.codehaus.jackson.map.ObjectMapper;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
-import org.javalite.common.JsonHelper;
 import request.BaseHandler;
 
-import java.io.IOException;
+import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
-import java.time.LocalDate;
-import java.util.List;
-import java.util.Map;
-
+import java.util.ArrayList;
 
 
 public class Main {
@@ -27,20 +25,34 @@ public class Main {
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             System.out.println("Connected!");
+
             LazyList<Medic> d = Medic.findAll();
             System.out.println(d.size());
             LazyList<UserLoginData> l2 = UserLoginData.findAll();
             System.out.println(l2.size());
             LazyList<Donation> l3 = Donation.findAll();
             System.out.println(l3.size());
+
             LazyList<BloodDemand> l4 = BloodDemand.findAll();
-            System.out.println(l4.size());
+            for(BloodDemand asd: l4){
+                System.out.println(asd.getQuantity());
+            }
+            /*
+            String bla = l4.toJson(false);
+            System.out.println(bla);
+            Gson gson = new Gson();
+            Type collectionType = new TypeToken<Collection<BloodDemand2>>(){}.getType();
+            Collection<BloodDemand2> arrayList = gson.fromJson(bla,collectionType);
+               */
             LazyList<Adress> l6 = Adress.findAll();
             System.out.println(l6.size());
+
 
             LazyList<Donor> l5 = Donor.findAll();
             System.out.println(l5.size());
 
+            LazyList<Donor> l7 = Donor.findAll();
+            System.out.println(l7.size());
 
             HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
             //Create the context for the server.
