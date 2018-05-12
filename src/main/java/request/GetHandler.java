@@ -1,8 +1,6 @@
 package request;
 
-import model.Donation;
-import model.Donor;
-import model.UserLoginData;
+import model.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 import utils.DTOutils;
@@ -13,8 +11,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
-import model.DonationCenter;
-import model.DonationSchedule;
+
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
@@ -59,13 +56,51 @@ public class GetHandler {
     }
 
     public static LazyList<DonationSchedule> donationSchedulesHandler(){
+        //LazyList<DonationSchedule> donationSchedules = null;
         try {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             LazyList<DonationSchedule> donationSchedules = DonationSchedule.findAll();
+            /*System.out.println("OOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+            System.out.println(donationSchedules.size());*/
             System.out.println("Donation Schedule size: "+donationSchedules.size());
             return donationSchedules;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
+
+    public static LazyList<Adress> adressHandler(){
+        try {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            LazyList<Adress> adresses = Adress.findAll();
+            System.out.println("Adress size: "+adresses.size());
+            return adresses;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
+
+    public static LazyList<Reservation> reservationHandler(){
+        LazyList<Reservation> reservations = null;
+        try {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            /*LazyList<Reservation>*/ reservations = Reservation.findAll();
+            System.out.println("Reservation size: "+reservations.size());
+            return reservations;
         }catch (Exception e){
             e.printStackTrace();
             return null;

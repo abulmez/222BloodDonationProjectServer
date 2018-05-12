@@ -27,7 +27,7 @@ public class Main {
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             System.out.println("Connected!");
-            LazyList<Medic> d = Medic.findAll();
+            /*LazyList<Medic> d = Medic.findAll();
             System.out.println(d.size());
             LazyList<UserLoginData> l2 = UserLoginData.findAll();
             System.out.println(l2.size());
@@ -39,10 +39,10 @@ public class Main {
             System.out.println(l6.size());
 
             LazyList<Donor> l5 = Donor.findAll();
-            System.out.println(l5.size());
+            System.out.println(l5.size());*/
 
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress("localhost",14423), 0);
             //Create the context for the server.
             server.createContext("/", new BaseHandler());
             server.setExecutor(null); // creates a default executor
