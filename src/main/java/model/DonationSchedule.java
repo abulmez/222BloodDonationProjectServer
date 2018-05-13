@@ -3,6 +3,7 @@ package model;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
+import java.sql.Timestamp;
 import java.time.LocalDate;
 
 @Table("DonationSchedule")
@@ -11,7 +12,7 @@ public class DonationSchedule extends Model {
     public DonationSchedule() {
     };
 
-    public DonationSchedule(Integer idDS, Integer idDC, LocalDate donationDateTime, Integer availableSpots, String status) {
+    public DonationSchedule(Integer idDS, Integer idDC, Timestamp donationDateTime, Integer availableSpots, String status) {
         set("IdDS",idDS);
         set("IdDC",idDC);
         set("DonationDateTime",donationDateTime);
@@ -27,8 +28,8 @@ public class DonationSchedule extends Model {
         return (Integer)get("IdDC");
     }
 
-    public LocalDate getDonationDateTime(){
-        return (LocalDate)get("DonationDateTime");
+    public Timestamp getDonationDateTime(){
+        return (Timestamp)get("DonationDateTime");
     }
 
     public Integer getAvailableSpots(){

@@ -45,6 +45,44 @@ public class PostHandler {
 
     }
 
+    public static String getAllDonationsForAUser(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("=");
+            String idU = params[1];
+            LazyList<Donation> list = Donation.where("IdU=?",idU);
+            String transfer = list.toJson(false);
+            return transfer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String getDonationReport(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("=");
+            String idDR = params[1];
+            DonationReport donationReport = DonationReport.findFirst("IdDR=?",idDR);
+            String transfer = donationReport.toJson(false);
+            System.out.println(transfer);
+            return transfer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
 
     public  static Integer registerHandler(InputStream in ){
         Base.open(
@@ -616,7 +654,32 @@ public class PostHandler {
         }
     }
 
+    public static String donationScheduleHandler(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String idDS = params[0].split("=")[1];
+            String idDC = params[1].split("=")[1];
+            System.out.println(idDS);
+            System.out.println(idDC);
 
+            Gson gson = new Gson();
+
+            LazyList<DonationSchedule> list = DonationSchedule.where("IdDC=? AND IdDS=?",idDC,idDS);
+
+            String transfer = list.toJson(false);
+            System.out.println(transfer);
+            return transfer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
 
 
 }

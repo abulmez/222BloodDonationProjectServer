@@ -343,6 +343,45 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/donationreport")) {
+            String response = PostHandler.getDonationReport(t.getRequestBody());
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+
+
+
+
+
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/donations"))
+        {
+            String response = PostHandler.getAllDonationsForAUser(t.getRequestBody());
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+
+        }
+
+
+
+
+
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/donationSchedule"))
+        {
+            String response = PostHandler.donationScheduleHandler(t.getRequestBody());
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+
         t.close();
     }
 }
