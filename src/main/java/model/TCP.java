@@ -1,11 +1,13 @@
 package model;
 
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 import java.time.LocalDate;
 
 
 @Table("Users ")
+@IdName("IdU")
 public class TCP extends User {
     public TCP(){};
 

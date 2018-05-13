@@ -3,13 +3,7 @@ package request;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import model.DonationCenter;
-import model.DonationSchedule;
-import model.BloodDemand;
-import model.Donation;
-import model.Donor;
-import model.BloodDemandDTO;
-import model.UserLoginData;
+import model.*;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.LazyList;
 import utils.DonationDTO;
@@ -337,6 +331,82 @@ public class BaseHandler implements HttpHandler {
             }
             else{
                 t.sendResponseHeaders(401, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getAllAvailableBloodProducts")) {
+
+            String response = "";
+            String productsJson = GetHandler.getAllAvailableBloodProducts(t.getRequestBody());
+            if (productsJson != null) {
+                response = productsJson;
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getAllDonationReceiverNames")) {
+
+                String response = "";
+                String donationsDTOJson = GetHandler.getAllDonationReceiverNames(t.getRequestBody());
+                if (donationsDTOJson != null) {
+                    response = donationsDTOJson;
+                    t.sendResponseHeaders(200, response.length());
+                } else {
+                    t.sendResponseHeaders(404, response.length());
+                }
+                OutputStream os = t.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+            }
+
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getAllBloodRequestsAndHospitalInfoForProductTypeAndGroup")) {
+
+            String response = "";
+            String bloodRequestsDTOJson = GetHandler.getAllBloodRequestsAndHospitalInfoForProductTypeAndGroup(t.getRequestBody());
+            if (bloodRequestsDTOJson != null) {
+                response = bloodRequestsDTOJson;
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonationCenterAddressFromDonationId")) {
+
+            String response = "";
+            String address = GetHandler.getDonationCenterAddressFromDonationId(t.getRequestBody());
+            if (address != null) {
+                response = address;
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/deleteBloodProduct")) {
+
+            String response = "";
+            Boolean ok = PostHandler.deleteBloodProduct(t.getRequestBody());
+            if (ok.equals(true)) {
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
             }
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());

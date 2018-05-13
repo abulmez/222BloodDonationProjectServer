@@ -1,9 +1,11 @@
 package model;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 @Table("Donation")
+@IdName("IdD")
 public class Donation extends Model {
 
     public Donation(){};
@@ -36,5 +38,8 @@ public class Donation extends Model {
         return (String)get("Status");
     }
 
+    public String getReceiverName(){
+        return (String)get("ReceiverName");
+    }
 
 }

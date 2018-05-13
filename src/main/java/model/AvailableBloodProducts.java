@@ -1,12 +1,14 @@
 package model;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 import java.util.Date;
 
 
 @Table("AvailableBloodProducts")
+@IdName("IdBP")
 public class AvailableBloodProducts extends Model {
     public AvailableBloodProducts(){};
 
@@ -31,7 +33,11 @@ public class AvailableBloodProducts extends Model {
         return (String)get("ProductType");
     }
 
-    public Date getValidUntil(){return (Date)get("ValidUntil");};
+    public Date getValidUntil(){return (Date)get("ValidUntil");}
 
-    public Double getQuantity(){return (Double)get("Quantity");};
+    public Double getQuantity(){return (Double)get("Quantity");}
+
+    public void setDeleted(Boolean value){
+        set("Deleted",value);
+    }
 }

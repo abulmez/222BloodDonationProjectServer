@@ -617,6 +617,22 @@ public class PostHandler {
     }
 
 
-
-
+    public static Boolean deleteBloodProduct(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            Integer idBD = Integer.parseInt(line.split("=")[1]);
+            AvailableBloodProducts bloodProduct = AvailableBloodProducts.findById(idBD);
+            bloodProduct.setDeleted(true);
+            bloodProduct.saveIt();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            Base.close();
+        }
+    }
 }

@@ -2,10 +2,13 @@ package model;
 
 import com.google.gson.annotations.Expose;
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.IdName;
 
 import java.sql.Date;
 import java.time.LocalDate;
 
+
+@IdName("IdU")
 public abstract class User extends Model {
 
     public User(){}
