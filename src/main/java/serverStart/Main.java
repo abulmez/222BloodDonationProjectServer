@@ -54,7 +54,7 @@ public class Main {
             LazyList<Donor> l7 = Donor.findAll();
             System.out.println(l7.size());
 
-            HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress("localhost",14423), 0);
             //Create the context for the server.
             server.createContext("/", new BaseHandler());
             server.setExecutor(null); // creates a default executor
@@ -62,8 +62,6 @@ public class Main {
             server.start();
             System.out.println(server.getAddress());
             System.out.println("Server started!");
-
-
         }
         catch (Exception e){
             e.printStackTrace();

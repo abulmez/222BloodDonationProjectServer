@@ -37,6 +37,22 @@ public class GetHandler {
         }
     }
 
+    public static LazyList<Donor> donorsHandler() {
+        try {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            LazyList<Donor> donors=Donor.findAll();
+            System.out.println("Donors size:" + donors.size());
+            return donors;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
 
     public static LazyList<DonationCenter> donationCentersHandler(){
         try {

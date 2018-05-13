@@ -8,12 +8,13 @@ public class Donation extends Model {
 
     public Donation(){};
 
-    public Donation(Integer idD, Integer idDC, Integer idU, Double quantity, String status) {
+    public Donation(Integer idD, Integer idDC, Integer idU, Double quantity, String status,String receiverName) {
         set("IdD",idD);
         set("IdDC",idDC);
         set("IdU",idU);
         set("Quantity",quantity);
         set("Status",status);
+        set("ReceiverName",receiverName);
     }
 
     public Integer getIdD(){
@@ -36,5 +37,7 @@ public class Donation extends Model {
         return (String)get("Status");
     }
 
-
+    public String getReceiverName(){
+        return (String)get("ReceiverName");
+    }
 }

@@ -1,6 +1,7 @@
 package request;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.DonationCenter;
@@ -18,6 +19,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class BaseHandler implements HttpHandler {
@@ -244,7 +246,6 @@ public class BaseHandler implements HttpHandler {
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonations")){
             List<DonationDTO> donations=GetHandler.donationsHandler();
             String response;
-
             if(donations.size() != 0){
                 response = new Gson().toJson(donations);
                 System.out.println(response);
@@ -257,7 +258,23 @@ public class BaseHandler implements HttpHandler {
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
             os.close();
+        }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonors")){
+            LazyList<Donor> donors=GetHandler.donorsHandler();
+            String response;
+            if(donors.size() != 0){
+                response = donors.toJson(true);
+                System.out.println(response);
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                response="nop";
+                t.sendResponseHeaders(401, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
         }
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addDonation")){
@@ -273,6 +290,19 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addBloodProduct")){
+            String response = PostHandler.addBloodProduct(t.getRequestBody());
+            if(response.equals("Success")){
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                t.sendResponseHeaders(422, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/modifyDonation")){
             String response = PostHandler.modifyDonationHandler(t.getRequestBody());
             if(response.equals("Success")){
@@ -280,6 +310,32 @@ public class BaseHandler implements HttpHandler {
             }
             else{
                 t.sendResponseHeaders(401, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/isDecomposed")){
+            String response = PostHandler.isDecomposedHandler(t.getRequestBody());
+            if(Boolean.parseBoolean(response)){
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addReport")){
+            String response = PostHandler.addReportHandler(t.getRequestBody());
+            if(response.equals("Success")){
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                t.sendResponseHeaders(409, response.length());
             }
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());

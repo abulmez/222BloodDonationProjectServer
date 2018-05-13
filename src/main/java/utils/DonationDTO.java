@@ -11,13 +11,15 @@ public class DonationDTO {
     private String cnp;
     private String status;
     private Double quantity;
-    public DonationDTO(Integer idD,String name,Integer idU,String cnp,String status,Double quantity){
+    private String receiverName;
+    public DonationDTO(Integer idD,String name,Integer idU,String cnp,String status,Double quantity,String receiverName){
         this.idD=idD;
         this.name=name;
         this.idU=idU;
         this.cnp=cnp;
         this.status=status;
         this.quantity=quantity;
+        this.receiverName=receiverName;
     }
 
     public Integer getIdD() {
@@ -44,4 +46,7 @@ public class DonationDTO {
         return quantity;
     }
 
+    public String getReceiverName() {
+        return receiverName;
+    }
 }
