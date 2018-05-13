@@ -291,7 +291,7 @@ public class BaseHandler implements HttpHandler {
         }
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addBloodProduct")){
-            String response = PostHandler.addBloodProduct(t.getRequestBody());
+            String response = PostHandler.addBloodProductHandler(t.getRequestBody());
             if(response.equals("Success")){
                 t.sendResponseHeaders(200, response.length());
             }

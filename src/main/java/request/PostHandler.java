@@ -403,7 +403,7 @@ public class PostHandler {
 
     }
 
-    public static String addBloodProduct(InputStream in) {
+    public static String addBloodProductHandler(InputStream in) {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
