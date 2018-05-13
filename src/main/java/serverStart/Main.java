@@ -54,15 +54,7 @@ public class Main {
             LazyList<Donor> l7 = Donor.findAll();
             System.out.println(l7.size());
 
-            LazyList<AvailableBloodProducts> l8 = AvailableBloodProducts.findAll();
-            System.out.println(l8.size());
-
-            LazyList<Hospital> l9 = Hospital.findAll();
-            System.out.println(l9.size());
-
-
-
-            HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress("localhost",14423), 0);
             //Create the context for the server.
             server.createContext("/", new BaseHandler());
             server.setExecutor(null); // creates a default executor

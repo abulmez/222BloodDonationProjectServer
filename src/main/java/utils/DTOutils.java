@@ -12,7 +12,7 @@ public class DTOutils {
     public static DonationDTO getDTO(Donation donation){
         Donor user=Donor.findFirst("IdU = ?",donation.getIdU());
         System.out.println(user.get("CNP"));
-        DonationDTO dto=new DonationDTO(donation.getIdD(),user.getName(),donation.getIdU(),user.get("cnp").toString(),donation.getStatus(),donation.getQuantity());
+        DonationDTO dto=new DonationDTO(donation.getIdD(),user.getName(),donation.getIdU(),user.get("cnp").toString(),donation.getStatus(),donation.getQuantity(),donation.getReceiverName());
         return dto;
     }
 
@@ -27,7 +27,7 @@ public class DTOutils {
 
     public static Donation fromDTO(DonationDTO donationDTO){
         TCP user=TCP.findFirst("IdU = ?",donationDTO.getIdU());
-        Donation donation=new Donation(donationDTO.getIdD(),user.getIdDC(),donationDTO.getIdU(),donationDTO.getQuantity(),donationDTO.getStatus());
+        Donation donation=new Donation(donationDTO.getIdD(),user.getIdDC(),donationDTO.getIdU(),donationDTO.getQuantity(),donationDTO.getStatus(),donationDTO.getReceiverName());
         return donation;
     }
 }
