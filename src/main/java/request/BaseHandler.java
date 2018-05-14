@@ -242,7 +242,7 @@ public class BaseHandler implements HttpHandler {
 
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonations")){
-            List<DonationDTO> donations=GetHandler.donationsHandler();
+            List<DonationDTO> donations=GetHandler.getDonationsHandler();
             String response;
 
             if(donations.size() != 0){
@@ -261,7 +261,7 @@ public class BaseHandler implements HttpHandler {
         }
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonors")){
-            LazyList<Donor> donors=GetHandler.donorsHandler();
+            LazyList<Donor> donors=GetHandler.getDonorsHandler();
             String response;
             if(donors.size() != 0){
                 response = donors.toJson(true);
@@ -291,7 +291,7 @@ public class BaseHandler implements HttpHandler {
         }
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addBloodProduct")){
-            String response = PostHandler.addBloodProduct(t.getRequestBody());
+            String response = PostHandler.addBloodProductHandler(t.getRequestBody());
             if(response.equals("Success")){
                 t.sendResponseHeaders(200, response.length());
             }
@@ -310,19 +310,6 @@ public class BaseHandler implements HttpHandler {
             }
             else{
                 t.sendResponseHeaders(401, response.length());
-            }
-            OutputStream os = t.getResponseBody();
-            os.write(response.getBytes());
-            os.close();
-        }
-
-        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/isDecomposed")){
-            String response = PostHandler.isDecomposedHandler(t.getRequestBody());
-            if(Boolean.parseBoolean(response)){
-                t.sendResponseHeaders(200, response.length());
-            }
-            else{
-                t.sendResponseHeaders(404, response.length());
             }
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());

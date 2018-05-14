@@ -24,7 +24,7 @@ import org.javalite.activejdbc.LazyList;
 
 public class GetHandler {
 
-    public static List<DonationDTO> donationsHandler() {
+    public static List<DonationDTO> getDonationsHandler() {
         try {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
@@ -41,7 +41,7 @@ public class GetHandler {
         }
     }
 
-    public static LazyList<Donor> donorsHandler() {
+    public static LazyList<Donor> getDonorsHandler() {
         try {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
