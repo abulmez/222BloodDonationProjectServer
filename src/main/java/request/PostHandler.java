@@ -107,11 +107,11 @@ public class PostHandler {
             String line = reader.readLine();
             String[] params = line.split("&");
             String idDS = params[0].split("=")[1];
-            String idDC = params[1].split("=")[1];
-            String status = params[2].split("=")[1];
-            System.out.println(idDS+" "+idDC+" "+status);
+            //String idDC = params[1].split("=")[1];
+            String status = params[1].split("=")[1];
+            System.out.println(idDS+" "+status);
             //// AICI
-            Base.exec("Update DonationSchedule Set Status = ? Where IdDS = ? and IdDC = ?",status,idDS,idDC);
+            Base.exec("Update Reservation Set Status = ? Where IdDS = ?",status,idDS);
             return "Success";
         }
         catch (Exception e) {
@@ -690,6 +690,22 @@ public class PostHandler {
     }
 
 
-
-
+    public static Boolean deleteBloodProduct(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            Integer idBD = Integer.parseInt(line.split("=")[1]);
+            AvailableBloodProducts bloodProduct = AvailableBloodProducts.findById(idBD);
+            bloodProduct.setDeleted(true);
+            bloodProduct.saveIt();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            Base.close();
+        }
+    }
 }

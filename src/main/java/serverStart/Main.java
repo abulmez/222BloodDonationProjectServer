@@ -62,6 +62,8 @@ public class Main {
             server.start();
             System.out.println(server.getAddress());
             System.out.println("Server started!");
+
+
         }
         catch (Exception e){
             e.printStackTrace();

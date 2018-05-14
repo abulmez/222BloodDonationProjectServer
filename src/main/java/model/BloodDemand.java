@@ -5,7 +5,7 @@ import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 @Table("BloodDemand")
-@IdName("IdBd")
+@IdName("IdBD")
 public class BloodDemand extends Model {
     public BloodDemand(){};
 
