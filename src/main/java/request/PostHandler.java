@@ -390,6 +390,31 @@ public class PostHandler {
         }
     }
 
+    public static DonationCenter addCentreHandler(InputStream in){
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line=reader.readLine();
+            DonationCenter dc = new DonationCenter();
+            String[] argumente = line.split("&");
+            String[] idA = argumente[0].split("=");
+            Integer idANumber = Integer.parseInt(idA[1]);
+            String[] name = argumente[1].split("=");
+            String nameCentre = name[1];
+            String[] phone = argumente[2].split("=");
+            String phoneCentre = phone[1];
+            dc.set("IdA",idANumber).set("CenterName",nameCentre).set("PhoneNumber",phoneCentre).saveIt();
+            return dc;
+        }catch(IOException e){
+            e.printStackTrace();
+            return null;
+        }
+        finally{
+            Base.close();
+        }
+    }
+
     public static String addDonationHandler(InputStream in) {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
             Base.open(

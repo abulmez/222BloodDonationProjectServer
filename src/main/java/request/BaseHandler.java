@@ -62,6 +62,22 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addCentre")){
+            DonationCenter dc = PostHandler.addCentreHandler(t.getRequestBody());
+            String response;
+            if(dc!=null){
+                response = String.format("Cererea pentru adaugarea centrului" + dc.getCenterName() + " a fost inregistrat");
+                t.sendResponseHeaders(200,response.length());
+            }else{
+                response="Adaugarea nu a putut fi realizata";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/modifyBloodDemand")){
             Integer code=PostHandler.modifyDemandHandler(t.getRequestBody());
             String response;
