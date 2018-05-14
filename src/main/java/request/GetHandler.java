@@ -1,8 +1,6 @@
 package request;
 
-import model.Donation;
-import model.Donor;
-import model.UserLoginData;
+import model.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 import utils.DTOutils;
@@ -12,9 +10,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
-import model.DonationCenter;
-import model.DonationSchedule;
+
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
@@ -29,6 +27,29 @@ public class GetHandler {
             System.out.println("Donations size:" + donations.size());
             return donations;
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static LazyList<Donor> getAdminsHandler(){
+        try {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            List<Donor> donors =new ArrayList<>();
+            List<UserLoginData> loginData = UserLoginData.findAll();
+            for(UserLoginData u:loginData){
+                if(u.getUserType().equals("Donor"))
+                    donors.add(Donor.findFirst("IdU = ?",u.getId()));
+            }
+            LazyList<Donor> lazy=Donor.findBySQL("Select * from Users u inner join LoginData d on u.idU=d.idLD where d.UserType=?","Donor");
+            for (Donor d:lazy)
+                System.out.println(d.getIdU());
+            return lazy;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

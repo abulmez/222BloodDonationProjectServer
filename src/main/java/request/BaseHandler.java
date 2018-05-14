@@ -1,6 +1,7 @@
 package request;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.DonationCenter;
@@ -17,6 +18,8 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 
 public class BaseHandler implements HttpHandler {
@@ -108,6 +111,25 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getUsers")){
+            String response=PostHandler.getUsers(t.getRequestBody());
+            /*String response="";
+            Gson gson = new Gson();
+            System.out.println(1);
+            response=donors.toJson(false);
+            Type collectionType = new TypeToken<ArrayList<Donor>>(){}.getType();
+            System.out.println(2);
+            ArrayList<Donor> donors2 = gson.fromJson(response, collectionType);
+            for (Donor d:donors2)
+                System.out.println(d.getIdU());
+            System.out.println(2);*/
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+
+        }
+
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/adress")){
             PostHandler.adressHandler(t.getRequestBody());
             String response="raspuns";
@@ -115,6 +137,15 @@ public class BaseHandler implements HttpHandler {
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
             os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getUsernames")){
+            String response=PostHandler.getUsernames(t.getRequestBody());
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+
         }
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/fields")){
@@ -152,7 +183,85 @@ public class BaseHandler implements HttpHandler {
         }
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/additional")){
-            PostHandler.additionalHandler(t.getRequestBody());
+                PostHandler.additionalHandler(t.getRequestBody());
+                String response="raspuns";
+                t.sendResponseHeaders(200, response.length());
+                OutputStream os = t.getResponseBody();
+                os.write(response.getBytes());
+                os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateAdmin")){
+            PostHandler.updateAdmin(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getHospitals")){
+            String response=PostHandler.getHospitals(t.getRequestBody());
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/addAdmin")){
+            PostHandler.addAdmin(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/addMedic")){
+            PostHandler.addMedic(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateMedicHospital")){
+            String response=PostHandler.updateMedicHospital(t.getRequestBody());
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateTCPCenter")){
+            String response=PostHandler.updateTCPCenter(t.getRequestBody());
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/addTCP")){
+            PostHandler.addTCP(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateDonor")){
+            PostHandler.updateDonor(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/deleteUser")){
+            PostHandler.deleteUser(t.getRequestBody());
             String response="raspuns";
             t.sendResponseHeaders(200, response.length());
             OutputStream os = t.getResponseBody();

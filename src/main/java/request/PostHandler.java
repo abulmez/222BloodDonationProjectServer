@@ -1,10 +1,12 @@
 package request;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import model.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
+import utils.CustomAdminDeserializer;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -135,6 +137,153 @@ public class PostHandler {
         }
     }
 
+    public static void addAdmin(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            String nume = params[1].split("=")[1];
+            String data = params[2].split("=")[1];
+            String mail = params[3].split("=")[1];
+            String phone = params[4].split("=")[1];
+            String user = params[5].split("=")[1];
+            String pass = params[6].split("=")[1];
+            String type = params[7].split("=")[1];
+            Admin a=new Admin();
+            a.setCnp(cnp);
+            a.setName(nume);
+            a.setBirthday(data);
+            a.setMail(mail);
+            a.setPhone(phone);
+            a.saveIt();
+            Admin a2=Admin.findFirst("CNP=?",cnp);
+            System.out.println(a2.getId());
+            UserLoginData u=new UserLoginData();
+            u.setId(a2.getId());
+            u.setUsername(user);
+            u.setPassword(pass);
+            u.setType(type);
+            u.insert();
+            System.out.println(10);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static void addMedic(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            String nume = params[1].split("=")[1];
+            String data = params[2].split("=")[1];
+            String mail = params[3].split("=")[1];
+            String phone = params[4].split("=")[1];
+            String user = params[5].split("=")[1];
+            String pass = params[6].split("=")[1];
+            String spital = params[7].split("=")[1];
+            //String type = params[7].split("=")[1];
+            Medic m=new Medic();
+            m.setCnp(cnp);
+            m.setName(nume);
+            m.setBirthday(data);
+            m.setMail(mail);
+            m.setPhone(phone);
+            m.setIdH(Integer.parseInt(spital));
+            m.insert();
+            Medic m2=Medic.findFirst("CNP=?",cnp);
+            UserLoginData u=new UserLoginData();
+            u.setId(m2.getIdU());
+            u.setUsername(user);
+            u.setPassword(pass);
+            u.setType("Medic");
+            u.insert();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static void addTCP(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            String nume = params[1].split("=")[1];
+            String data = params[2].split("=")[1];
+            String mail = params[3].split("=")[1];
+            String phone = params[4].split("=")[1];
+            String user = params[5].split("=")[1];
+            String pass = params[6].split("=")[1];
+            String spital = params[7].split("=")[1];
+            //String type = params[7].split("=")[1];
+            TCP tcp=new TCP();
+            tcp.setCnp(cnp);
+            tcp.setName(nume);
+            tcp.setBirthday(data);
+            tcp.setMail(mail);
+            tcp.setPhone(phone);
+            tcp.setIdDC(Integer.parseInt(spital));
+            tcp.insert();
+            TCP tcp2=TCP.findFirst("CNP=?",cnp);
+            UserLoginData u=new UserLoginData();
+            u.setId(tcp2.getIdU());
+            u.setUsername(user);
+            u.setPassword(pass);
+            u.setType("TCP");
+            u.insert();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String getHospitals(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String type = params[0].split("=")[1];
+            List<Integer> list=new ArrayList<>();
+            Gson gson=new Gson();
+            if (type.equals("Medic")){
+                List<Hospital> hospitals=Hospital.findAll();
+                for (Hospital h:hospitals)
+                    list.add(h.getIdH());
+                String transfer=gson.toJson(list);
+                return transfer;
+            }
+            else if(type.equals("TCP")) {
+                List<DonationCenter> centers = DonationCenter.findAll();
+                for (DonationCenter c : centers)
+                    list.add(c.getIdDC());
+                String transfer = gson.toJson(list);
+                return transfer;
+            }
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
     public static void additionalHandler(InputStream in) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Base.open(
@@ -237,6 +386,7 @@ public class PostHandler {
             List<Donor> donors = Donor.where("IdU=?", idU);
             List<UserLoginData> users = UserLoginData.where("IdLD=?", idU);
             List<Adress> adresses = Adress.where("IdA=?",donors.get(0).getIdA() );
+            List<Adress> ad=new ArrayList<>();
             List<SuffersOf> suf=SuffersOf.where("IdU=?",idU);
             Donor d=donors.get(0);
             UserLoginData uld=users.get(0);
@@ -260,6 +410,229 @@ public class PostHandler {
                 return urlParameters;
             }
 
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static void updateDonor(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            String cnpNou = params[1].split("=")[1];
+            String nume = params[2].split("=")[1];
+            String data = params[3].split("=")[1];
+            String mail = params[4].split("=")[1];
+            String phone = params[5].split("=")[1];
+            String blood = params[6].split("=")[1];
+            String weight = params[7].split("=")[1];
+            Donor.update("CNP=?,Name=?,Birthday=?,Mail=?,Phone=?,BloodGroup=?,Weight=?","CNP=?",cnpNou,nume,data,mail,phone,blood,weight,cnp);
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String updateMedicHospital(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            String spital = params[1].split("=")[1];
+            String send="no";
+            try {
+                Medic.update("IdH=?", "CNP=?", spital, cnp);
+                send = "yes";
+            }catch (Exception e){}
+            return send;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String updateTCPCenter(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            String center = params[1].split("=")[1];
+            String send="no";
+            try {
+                TCP.update("IdDC=?", "CNP=?", center, cnp);
+                send = "yes";
+            }catch (Exception e){}
+            return send;
+
+        }catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static void updateAdmin(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            String cnpNou = params[1].split("=")[1];
+            String nume = params[2].split("=")[1];
+            String data = params[3].split("=")[1];
+            String mail = params[4].split("=")[1];
+            String phone = params[5].split("=")[1];
+            Admin a=Admin.findFirst("CNP=?",cnp);
+            Admin.update("CNP=?,Name=?,Birthday=?,Mail=?,Phone=?","CNP=?",cnpNou,nume,data,mail,phone,cnp);
+            System.out.println(cnp);
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static void deleteUser(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String type = params[0].split("=")[1];
+            String cnp = params[1].split("=")[1];
+            if (type.equals("Donor")) {
+                Donor donor = Donor.findFirst("CNP = ?", cnp);
+                UserLoginData u = UserLoginData.findFirst("IdLD=?", donor.getId());
+                u.delete();
+            } else if (type.equals("Admin")) {
+                Adress adress;
+                Admin admin = Admin.findFirst("CNP = ?", cnp);
+                if (admin.getIdA() != null) {
+                    adress = Adress.findFirst("IdA=?", admin.getIdA());
+                    UserLoginData u = UserLoginData.findFirst("IdLD=?", admin.getId());
+                    u.delete();
+                    admin.delete();
+                    adress.delete();
+                } else {
+                    UserLoginData u = UserLoginData.findFirst("IdLD=?", admin.getId());
+                    u.delete();
+                    admin.delete();
+                }
+            } else if (type.equals("Medic")) {
+                Adress adress;
+                Medic medic = Medic.findFirst("CNP = ?", cnp);
+                if (medic.getIdA() != null) {
+                    adress = Adress.findFirst("IdA=?", medic.getIdA());
+                    UserLoginData u = UserLoginData.findFirst("IdLD=?", medic.getId());
+                    u.delete();
+                    medic.delete();
+                    adress.delete();
+                } else {
+                    UserLoginData u = UserLoginData.findFirst("IdLD=?", medic.getId());
+                    u.delete();
+                    medic.delete();
+                }
+            } else if (type.equals("TCP")) {
+                Adress adress;
+                TCP tcp = TCP.findFirst("CNP = ?", cnp);
+                if (tcp.getIdA() != null) {
+                    adress = Adress.findFirst("IdA=?", tcp.getIdA());
+                    UserLoginData u = UserLoginData.findFirst("IdLD=?", tcp.getId());
+                    u.delete();
+                    tcp.delete();
+                    adress.delete();
+                } else {
+                    UserLoginData u = UserLoginData.findFirst("IdLD=?", tcp.getId());
+                    u.delete();
+                    tcp.delete();
+                }
+            }
+
+        }catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String getUsers(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String type = params[0].split("=")[1];
+            if(type.equals("Donor")) {
+                LazyList<Donor> lazy = Donor.findBySQL("Select * from Users u inner join LoginData d on u.idU=d.idLD where d.UserType=?", type);
+                String response = lazy.toJson(false);
+                return response;
+            }
+            else if (type.equals("Admin")){
+                LazyList<Admin> lazy=Admin.findBySQL("Select * from Users u inner join LoginData d on u.idU=d.idLD where d.UserType=?", type);
+                String response = lazy.toJson(false);
+                return response;
+            }
+            else if (type.equals("Medic")){
+                LazyList<Medic> lazy=Medic.findBySQL("Select * from Users u inner join LoginData d on u.idU=d.idLD where d.UserType=?", type);
+                String response = lazy.toJson(false);
+                return response;
+            }
+            else if (type.equals("TCP")) {
+                LazyList<TCP> lazy = TCP.findBySQL("Select * from Users u inner join LoginData d on u.idU=d.idLD where d.UserType=?", type);
+                String response = lazy.toJson(false);
+                return response;
+            }
+            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String getUsernames(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            List<UserLoginData> loginData = UserLoginData.findAll();
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String type = params[0].split("=")[1];
+            List<String> users=new ArrayList<>();
+            for (UserLoginData u:loginData){
+                if(u.getUserType().equals(type)) {
+                    users.add(u.getId().toString());
+                    users.add(u.getUsername());
+                }
+            }
+            Gson gson=new Gson();
+            String transfer=gson.toJson(users);
+            return transfer;
         } catch (Exception e) {
             e.printStackTrace();
             return null;

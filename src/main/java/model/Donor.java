@@ -1,9 +1,11 @@
 package model;
 
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 import java.time.LocalDate;
 
+@IdName("idU")
 @Table("dbo.Users")
 public class Donor extends User {
 

@@ -1,10 +1,12 @@
 package model;
 
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 
 import java.time.LocalDate;
 
-
+@IdName("idU")
+@Table("dbo.Users   ")
 public class TCP extends User {
     public TCP(){};
 
@@ -17,5 +19,11 @@ public class TCP extends User {
     public Integer getIdDC(){
         return (Integer)get("IdDc");
     }
+
+    public void setIdDC(Integer idDC){
+        set("IdDC", idDC);
+    }
+
+    public Integer getIdA(){return (Integer)get("IdA");}
 
 }

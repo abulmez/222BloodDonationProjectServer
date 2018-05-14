@@ -33,6 +33,26 @@ public abstract class User extends Model {
         return date.toLocalDate();
     }
 
+    public void setCnp(String cnp){
+        set("CNP", cnp);
+    }
+
+    public void setName(String name){
+        set("Name", name);
+    }
+
+    public void setBirthday(String date){
+        set("Birthday",date);
+    }
+
+    public void setMail(String mail){
+        set("Mail",mail);
+    }
+
+    public void setPhone(String phone){
+        set("Phone",phone);
+    }
+
     public String getMail(){
         return (String)get("Mail");
     }
@@ -42,7 +62,6 @@ public abstract class User extends Model {
     }
 
     public String getCNP(){return (String)get("CNP");}
-
 
 
 }
