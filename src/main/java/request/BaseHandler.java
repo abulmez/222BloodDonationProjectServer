@@ -3,13 +3,7 @@ package request;
 import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import model.DonationCenter;
-import model.DonationSchedule;
-import model.BloodDemand;
-import model.Donation;
-import model.Donor;
-import model.BloodDemandDTO;
-import model.UserLoginData;
+import model.*;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.LazyList;
 import utils.DonationDTO;
@@ -327,6 +321,28 @@ public class BaseHandler implements HttpHandler {
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
             os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getAllHospitalsHandler"))
+        {
+            LazyList<Hospital> hospitals = GetHandler.getAllHospitalsHandler();
+            String response;
+
+            if(hospitals.size() != 0){
+                response=hospitals.toJson(true);
+                System.out.println("=======");
+                System.out.println(response);
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+
         }
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateDonationScheduleStatus")){

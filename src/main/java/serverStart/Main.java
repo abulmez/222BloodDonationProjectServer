@@ -46,7 +46,10 @@ public class Main {
                 System.out.println(dr.getIdDR() + " " + dr.getSamplingDate() + " " + dr.getBloodStatus() + " " + dr.getBloodReport());
             }
 
-
+            List<Hospital> hospitals = Hospital.findAll();
+            for(Hospital hospital:hospitals){
+                System.out.println(hospital.getIdA().toString() + " " + hospital.getIdH().toString() + " " + hospital.getHospitalName() + " " + hospital.getPhoneNumber() );
+            }
 
 //            LazyList<UserLoginData> l2 = UserLoginData.findAll();
 //            System.out.println(l2.size());
