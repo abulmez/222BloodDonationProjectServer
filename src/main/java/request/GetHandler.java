@@ -6,12 +6,14 @@ import model.DTO.BloodProductShipmentAddressDTO;
 import model.DTO.BloodRequestHospitalDTO;
 import model.DTO.DonationReceiverNameBloodGroupDTO;
 import model.*;
+import model.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 import utils.DTOutils;
 import utils.DonationDTO;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -301,6 +303,27 @@ public class GetHandler {
 
             TCP tcp = TCP.findById(idTCP);
             return tcp.getIdDC();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
+
+    public static LazyList<Adress> donationCentersAdressesHandler() {
+        try {
+            System.out.print("Am ajuns aici");
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            LazyList<DonationCenter> donationCenters = DonationCenter.findAll();
+            List<Integer> ids = new ArrayList<>();
+            donationCenters.forEach(x->{ids.add(x.getIdA());});
+            LazyList<Adress> adresses = Adress.findAll();
+            adresses.removeIf(x-> !ids.contains(x.getIdA()));
+            return adresses;
         }catch (Exception e){
             e.printStackTrace();
             return null;

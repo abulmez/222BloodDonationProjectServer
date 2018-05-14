@@ -48,38 +48,26 @@ public class PostHandler {
 
 
     public  static Integer registerHandler(InputStream in ){
-        Base.open(
-                "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-                "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
-        Integer id = null;
         try{
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-            String line = reader.readLine();
-            String[] parameters = line.split("%1%1%");
-
+            String[] parameters = reader.readLine().split("%1%1%");
             UserLoginData userLoginData = new UserLoginData();
-            String userLoginDataString = parameters[0];
-            userLoginData.fromMap(JsonHelper.toMap(userLoginDataString));
-
+            userLoginData.fromMap(JsonHelper.toMap(parameters[0]));
             Donor donor = new Donor();
-            String donorString = parameters[1];
-            donor.fromMap(JsonHelper.toMap(donorString));
-            User donorFinal = new Donor(donor.getCNP(),donor.getName(), LocalDate.of(1911,12,13),donor.getMail(),donor.getPhone(),donor.getBloodGroup(),donor.getWeight());
+            System.out.print(parameters[1]);
+            User donorFinal = JsonHelper.DonorJsonParser(parameters[1]);
             LazyList<Donor> listDonor = Donor.where("CNP = ? AND Mail = ?",donor.getCNP(),donor.getMail());
-            if(listDonor.size()>0){
+            LazyList<UserLoginData> listUser= UserLoginData.where("Username = ? and UserType = ?",userLoginData.getUsername(),userLoginData.getUserType());
+            if(listDonor.size()>0 || listUser.size()>0){
                 return 409;
             }
-            else{
-                LazyList<UserLoginData> listUser= UserLoginData.where("Username = ? and UserType = ?",userLoginData.getUsername(),userLoginData.getUserType());
-                if (listUser.size()>0)
-                    return 409;
-                else {
+            else {
                     if(donorFinal.saveIt()) {
                         LazyList<Donor> list = Donor.where("CNP = ?",donorFinal.getCNP());
-                        for (Donor donor1:list) {
-                            id=donor1.getIdU();
-                        }
-
+                        Integer id = list.get(0).getIdU();
                         UserLoginData fianlUser = new UserLoginData();
                         fianlUser.set("Username",userLoginData.getUsername());
                         fianlUser.set("Password",userLoginData.getPassword());
@@ -87,15 +75,15 @@ public class PostHandler {
                         fianlUser.setId(id);
                         fianlUser.insert();
                         return 201;
-
                     }
-                }
             }
         } catch (Exception e) {
             e.printStackTrace();
             return 401;
         }
-        System.out.print("Aiciex1");
+        finally {
+            Base.close();
+        }
         return 401;
 
     }
@@ -565,11 +553,8 @@ public class PostHandler {
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             String line=reader.readLine();
-
             Integer idBd=Integer.parseInt(line.split("=")[1]);
             BloodDemand e = BloodDemand.findFirst("IdBd = ?", idBd);
-
-
             String nume=e.getDescription();
             e.delete();
             return "Cererea cu id-ul: "+idBd+" pentru pacientul: "+nume+" a fost stearsa";
