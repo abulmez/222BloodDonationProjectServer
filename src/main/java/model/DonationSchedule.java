@@ -11,12 +11,12 @@ public class DonationSchedule extends Model {
     public DonationSchedule() {
     };
 
-    public DonationSchedule(Integer idDS, Integer idDC, LocalDate donationDateTime, Integer availableSpots, String status) {
+    public DonationSchedule(Integer idDS, Integer idDC, LocalDate donationDateTime, Integer availableSpots) {
         set("IdDS",idDS);
         set("IdDC",idDC);
         set("DonationDateTime",donationDateTime);
         set("AvailableSpots",availableSpots);
-        set("Status",status);
+        //set("Status",status);
     }
 
     public Integer getIdDS(){
@@ -35,7 +35,7 @@ public class DonationSchedule extends Model {
         return (Integer)get("AvailableSpots");
     }
 
-    public String getStatus(){
+    /*public String getStatus(){
         return (String)get("Status");
-    }
+    }*/
 }

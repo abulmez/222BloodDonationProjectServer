@@ -379,6 +379,46 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getAdress")){
+            LazyList<Adress> adresses = GetHandler.adressHandler();
+            String response;
+
+            if(adresses.size() != 0){
+                response=adresses.toJson(true);
+                System.out.println("Adress");
+                System.out.println(response);
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getReservation")){
+            LazyList<Reservation> reservations = GetHandler.reservationHandler();
+            String response;
+
+            if(reservations.size() != 0){
+                response=reservations.toJson(true);
+                System.out.println("Reservation");
+                System.out.println(response);
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateDonationScheduleStatus")){
             String response=PostHandler.statusDonationScheduleUpdateHandler(t.getRequestBody());
             //String response="raspuns";

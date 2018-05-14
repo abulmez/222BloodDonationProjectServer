@@ -107,11 +107,11 @@ public class PostHandler {
             String line = reader.readLine();
             String[] params = line.split("&");
             String idDS = params[0].split("=")[1];
-            String idDC = params[1].split("=")[1];
-            String status = params[2].split("=")[1];
-            System.out.println(idDS+" "+idDC+" "+status);
+            //String idDC = params[1].split("=")[1];
+            String status = params[1].split("=")[1];
+            System.out.println(idDS+" "+status);
             //// AICI
-            Base.exec("Update DonationSchedule Set Status = ? Where IdDS = ? and IdDC = ?",status,idDS,idDC);
+            Base.exec("Update Reservation Set Status = ? Where IdDS = ?",status,idDS);
             return "Success";
         }
         catch (Exception e) {
