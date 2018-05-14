@@ -1,15 +1,10 @@
 package request;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
-import model.DonationCenter;
-import model.DonationSchedule;
-import model.BloodDemand;
-import model.Donation;
-import model.Donor;
-import model.BloodDemandDTO;
-import model.UserLoginData;
+import model.*;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.LazyList;
 import utils.DonationDTO;
@@ -19,6 +14,9 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.util.List;
+
+import static java.lang.reflect.Modifier.STATIC;
+import static java.lang.reflect.Modifier.TRANSIENT;
 
 public class BaseHandler implements HttpHandler {
     //Handler method
@@ -308,6 +306,29 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonationCenterAddresses")){
+
+            LazyList<Adress> donationCenters = GetHandler.donationCentersAdressesHandler();
+            String response="";
+            if((donationCenters != null ? donationCenters.size() : 0) != 0){
+                try {
+                    response = donationCenters.toJson(true);
+                }catch (Exception ex)
+                {
+                    ex.printStackTrace();
+                }
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                System.out.print(response);
+                t.sendResponseHeaders(401,response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonationSchedule")){
             LazyList<DonationSchedule> donationSchedules = GetHandler.donationSchedulesHandler();
