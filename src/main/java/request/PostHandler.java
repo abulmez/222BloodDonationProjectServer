@@ -359,16 +359,24 @@ public class PostHandler {
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             String line = reader.readLine();
             String[] params = line.split("&");
-            String name = params[0].split("=")[1];
+            System.out.println(line);
+            Integer idU =Integer.parseInt(params[0].split("=")[1]);
             String cnp=params[1].split("=")[1];
             String status=params[2].split("=")[1];
             Double quantity=Double.parseDouble(params[3].split("=")[1]);
-            String receiverName=params[4].split("=")[1];
+            String receiverName;
+            String[] receiverData=params[4].split("=");
+            if (receiverData.length==2)
+                receiverName=receiverData[1];
+            else
+                receiverName=null;
             Donor user= Donor.findFirst("CNP = ?",cnp);
-            Donation donation= Donation.create("IdDC",user.get("IdDC"),"Quantity",quantity,"Status",status,"IdU",user.getIdU(),"ReceiverName",receiverName);
+            TCP tcp=TCP.findFirst("IdU = ?",idU);
+            Donation donation= Donation.create("IdDC",tcp.get("IdDC"),"Quantity",quantity,"Status",status,"IdU",user.getIdU(),"ReceiverName",receiverName);
             donation.saveIt();
             return "Success";
         } catch (Exception e) {
+            e.printStackTrace();
             return e.getMessage();
         }
         finally {
@@ -390,11 +398,11 @@ public class PostHandler {
             String observatii=params[3].split("=")[1];
             DonationReport report= DonationReport.create("IdDR",id,"SamplingDate",data,"BloodStatus",status,"BloodReport",observatii);
             System.out.println(report.getIdName());
-            System.out.println("AICISISISISISISI");
             report.saveIt();
             return "Success";
 
         } catch (Exception e) {
+            e.printStackTrace();
             return e.getMessage();
         }
         finally {
@@ -419,6 +427,7 @@ public class PostHandler {
             return "Success";
 
         } catch (Exception e) {
+            e.printStackTrace();
             return e.getMessage();
         }
         finally {
@@ -436,41 +445,13 @@ public class PostHandler {
             String[] params = line.split("&");
             String status = params[0].split("=")[1];
             Integer idD =Integer.parseInt( params[1].split("=")[1]);
-            //Donation donation=Donation.findFirst("IdD = ?",idD);
-            //donation.set("Status",status);
-            //    donation.saveIt();
-            System.out.println("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
             Donation.update("Status=?","IdD=?",status,idD);
-
             Donation donation=Donation.findFirst("IdD = ?",idD);
-            System.out.println(donation.getStatus()+"AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-
-            //Base.exec("UPDATE Donation SET Status = ? WHERE IdD = ?",status,donation.getIdD());
+            System.out.println(donation.getStatus());
             return "Success";
 
         } catch (Exception e) {
-            return e.getMessage();
-        }
-        finally {
-            Base.close();
-        }
-    }
-
-    public static String isDecomposedHandler(InputStream in) {
-        try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
-            Base.open(
-                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
-                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
-            String line = reader.readLine();
-            String id = line.split("=")[1];
-            Integer idD =Integer.parseInt(id);
-            AvailableBloodProducts product=AvailableBloodProducts.findFirst("IdD=?",idD);
-            if (product!=null)
-                return "true";
-            else
-                return "false";
-        } catch (Exception e) {
+            e.printStackTrace();
             return e.getMessage();
         }
         finally {
