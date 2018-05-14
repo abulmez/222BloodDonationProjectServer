@@ -3,6 +3,7 @@ package request;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.*;
+import model.DTO.BloodRequestHospitalDTO;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
@@ -704,6 +705,49 @@ public class PostHandler {
         } catch (Exception e) {
             e.printStackTrace();
             return false;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static Boolean sendBloodProduct(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            Integer idBP = Integer.parseInt(line.split("&")[0].split("=")[1]);
+            Integer idBD = Integer.parseInt(line.split("&")[1].split("=")[1]);
+            BloodProductsShippment shippment = new BloodProductsShippment(idBP,idBD);
+            shippment.saveIt();
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static Integer splitBloodProduct(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            Integer idBP = Integer.parseInt(line.split("&")[0].split("=")[1]);
+            Double quantity = Double.parseDouble(line.split("&")[1].split("=")[1]);
+
+            AvailableBloodProducts oldProduct = AvailableBloodProducts.findById(idBP);
+            AvailableBloodProducts newProduct1 = new AvailableBloodProducts(oldProduct.getIdD(),oldProduct.getProductType(),oldProduct.getValidUntil(),oldProduct.getQuantity()-quantity);
+            AvailableBloodProducts newProduct2 = new AvailableBloodProducts(oldProduct.getIdD(),oldProduct.getProductType(),oldProduct.getValidUntil(),quantity);
+            oldProduct.delete();
+            newProduct1.saveIt();
+            newProduct2.saveIt();
+            return Integer.parseInt(newProduct2.getId().toString());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         } finally {
             Base.close();
         }

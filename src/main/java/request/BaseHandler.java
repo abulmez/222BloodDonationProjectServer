@@ -509,6 +509,64 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/sendBloodProduct")) {
+            String response = "";
+            Boolean ok = PostHandler.sendBloodProduct(t.getRequestBody());
+            if (ok.equals(true)) {
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getAllBloodProductShipmentForDonationCenter")) {
+
+            String response = "";
+            String bloodProductShipmentAdressDTOJson = GetHandler.getAllBloodProductShipmentForDonationCenter(t.getRequestBody());
+            if (bloodProductShipmentAdressDTOJson != null) {
+                response = bloodProductShipmentAdressDTOJson;
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonationCenterIdForTCP")) {
+
+            String response = "";
+            Integer idDC = GetHandler.getDonationCenterIdForTCP(t.getRequestBody());
+            if (idDC != null) {
+                response = idDC.toString();
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/splitBloodProduct")) {
+
+            String response = "";
+            Integer idBP = PostHandler.splitBloodProduct(t.getRequestBody());
+            if (idBP != null) {
+                response = idBP.toString();
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         t.close();
     }
 }

@@ -21,6 +21,13 @@ public class AvailableBloodProducts extends Model {
         set("Quantity",Quantity);
     }
 
+    public AvailableBloodProducts(Integer idD,String ProductType,Date ValidUntil,Double Quantity) {
+        set("IdD",idD);
+        set("ProductType",ProductType);
+        set("ValidUntil",ValidUntil);
+        set("Quantity",Quantity);
+    }
+
     public Integer getIdBP(){
         return (Integer)get("IdBP");
     }
@@ -35,7 +42,7 @@ public class AvailableBloodProducts extends Model {
 
     public Date getValidUntil(){return (Date)get("ValidUntil");}
 
-    public Double getQuantity(){return (Double)get("Quantity");}
+    public Double getQuantity(){return Double.parseDouble(get("Quantity").toString());}
 
     public void setDeleted(Boolean value){
         set("Deleted",value);

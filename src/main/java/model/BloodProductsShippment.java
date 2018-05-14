@@ -15,6 +15,11 @@ public class BloodProductsShippment extends Model{
             set("IdBd",idBD);
         }
 
+        public BloodProductsShippment(Integer idBP, Integer idBD) {
+            set("IdBP",idBP);
+            set("IdBD",idBD);
+        }
+
         public Integer getIdBPS(){
             return (Integer)get("IdBPS");
         }
