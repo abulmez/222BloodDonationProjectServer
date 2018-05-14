@@ -285,6 +285,26 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getUserPacient")){
+            LazyList<UserPacient> userPacients = GetHandler.userPacientsHandler();
+            String response;
+
+            if(userPacients.size() != 0){
+                response=userPacients.toJson(true);
+                System.out.println("UserPacient");
+                System.out.println(response);
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateDonationScheduleStatus")){
             String response=PostHandler.statusDonationScheduleUpdateHandler(t.getRequestBody());
             //String response="raspuns";

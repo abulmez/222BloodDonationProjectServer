@@ -92,6 +92,23 @@ public class GetHandler {
         }
     }
 
+    public static LazyList<UserPacient> userPacientsHandler(){
+        try {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            LazyList<UserPacient> userPacients = UserPacient.findAll();
+            System.out.println("UserPacient size: "+userPacients.size());
+            return userPacients;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
+
     public static LazyList<Reservation> reservationHandler(){
         LazyList<Reservation> reservations = null;
         try {
