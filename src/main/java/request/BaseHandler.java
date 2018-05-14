@@ -78,6 +78,22 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addHospital")){
+            Hospital hospital = PostHandler.addHospitalHandler(t.getRequestBody());
+            String response;
+            if(hospital!=null){
+                response = String.format("Cererea pentru adaugarea centrului" + hospital.getHospitalName() + " a fost inregistrat");
+                t.sendResponseHeaders(200,response.length());
+            }else{
+                response="Adaugarea nu a putut fi realizata";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/modifyBloodDemand")){
             Integer code=PostHandler.modifyDemandHandler(t.getRequestBody());
             String response;
@@ -206,6 +222,25 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/deleteCentre")){
+            PostHandler.deleteCentreHandle(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/deleteHospital"))
+        {
+            PostHandler.deleteHospitalHandle(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/fields")){
             String response=PostHandler.fieldsHandler(t.getRequestBody());
             t.sendResponseHeaders(200, response.length());
@@ -224,6 +259,26 @@ public class BaseHandler implements HttpHandler {
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/userUpdate")){
             PostHandler.userUpdateHandler(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/updateCentre"))
+        {
+            PostHandler.updateCentreHandle(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/updateHospital"))
+        {
+            PostHandler.updateHospitalHandle(t.getRequestBody());
             String response="raspuns";
             t.sendResponseHeaders(200, response.length());
             OutputStream os = t.getResponseBody();

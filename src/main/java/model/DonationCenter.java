@@ -1,8 +1,9 @@
 package model;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
-
+@IdName("IdDC")
 @Table("DonationCenter")
 public class DonationCenter extends Model {
 

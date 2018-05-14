@@ -1,8 +1,9 @@
 package model;
 
 import org.javalite.activejdbc.Model;
+import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
-
+@IdName("IdH")
 @Table("Hospital")
 public class Hospital extends Model{
 
@@ -14,9 +15,9 @@ public class Hospital extends Model{
     public Hospital(){};
     public Hospital( Integer idH, Integer idA, String hospitalName, String phoneNumber) {
 
-        set("IdDC",idH);
+        set("IdH",idH);
         set("IdA",idA);
-        set("CenterName",hospitalName);
+        set("HospitalName",hospitalName);
         set("PhoneNumber",phoneNumber);
     }
 

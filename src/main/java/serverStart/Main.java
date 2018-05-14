@@ -27,8 +27,8 @@ public class Main {
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             System.out.println("Connected!");
 
-//            LazyList<Medic> d = Medic.findAll();
-//            System.out.println(d.size());
+            LazyList<Medic> d = Medic.findAll();
+            System.out.println(d.size());
 
             List<Donor> list = Donor.findAll();
             for(Donor u:list){
@@ -51,31 +51,36 @@ public class Main {
                 System.out.println(hospital.getIdA().toString() + " " + hospital.getIdH().toString() + " " + hospital.getHospitalName() + " " + hospital.getPhoneNumber() );
             }
 
-//            LazyList<UserLoginData> l2 = UserLoginData.findAll();
-//            System.out.println(l2.size());
-//            LazyList<Donation> l3 = Donation.findAll();
-//            System.out.println(l3.size());
-//
-//            LazyList<BloodDemand> l4 = BloodDemand.findAll();
-//            for(BloodDemand asd: l4){
-//                System.out.println(asd.getQuantity());
-//            }
-//            /*
+            List<DonationCenter> donationCenters = DonationCenter.findAll();
+            for(DonationCenter donation:donationCenters)
+            {
+                System.out.println(donation.getCenterName() + donation.getPhoneNumber());
+            }
+            LazyList<UserLoginData> l2 = UserLoginData.findAll();
+            System.out.println(l2.size());
+            LazyList<Donation> l3 = Donation.findAll();
+            System.out.println(l3.size());
+
+            LazyList<BloodDemand> l4 = BloodDemand.findAll();
+            for(BloodDemand asd: l4){
+                System.out.println(asd.getQuantity());
+            }
+
 //            String bla = l4.toJson(false);
 //            System.out.println(bla);
 //            Gson gson = new Gson();
 //            Type collectionType = new TypeToken<Collection<BloodDemand2>>(){}.getType();
 //            Collection<BloodDemand2> arrayList = gson.fromJson(bla,collectionType);
-//               */
-//            LazyList<Adress> l6 = Adress.findAll();
-//            System.out.println(l6.size());
 //
-//
-//            LazyList<Donor> l5 = Donor.findAll();
-//            System.out.println(l5.size());
-//
-//            LazyList<Donor> l7 = Donor.findAll();
-//            System.out.println(l7.size());
+            LazyList<Adress> l6 = Adress.findAll();
+            System.out.println(l6.size());
+
+
+            LazyList<Donor> l5 = Donor.findAll();
+            System.out.println(l5.size());
+
+            LazyList<Donor> l7 = Donor.findAll();
+            System.out.println(l7.size());
 
             HttpServer server = HttpServer.create(new InetSocketAddress(14423), 0);
             //Create the context for the server.
