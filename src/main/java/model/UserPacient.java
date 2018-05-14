@@ -3,8 +3,9 @@ package model;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
-import java.sql.Date;
+//import java.sql.Date;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Table("Users")
 public class UserPacient extends Model {
@@ -12,10 +13,10 @@ public class UserPacient extends Model {
     public UserPacient(){
     };
 
-    public UserPacient(Integer idU,String CNP,String name,LocalDate birthday,String mail,String phone,String bloodGroup,Double weight,Integer idA,Integer idDC,Integer idH){
+    public UserPacient(Integer idU, String CNP, String name, /*Date birthday*/ String mail, String phone, String bloodGroup, Double weight, Integer idA, Integer idDC, Integer idH){
         set("IdU",idU);
         set("Name",name);
-        set("Birthday",birthday);
+        //set("Birthday",birthday);
         set("CNP",CNP);
         set("Mail",mail);
         set("Phone",phone);
@@ -37,10 +38,10 @@ public class UserPacient extends Model {
         return (String)get("Name");
     }
 
-    public LocalDate getBirthday(){
+    /*public Date getBirthday(){
 
-        return  (LocalDate)get("Birthday");
-    }
+        return  (Date) get("Birthday");
+    }*/
 
     public String getMail(){
         return (String)get("Mail");
