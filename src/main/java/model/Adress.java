@@ -6,7 +6,6 @@ import org.javalite.activejdbc.annotations.Table;
 
 @IdName("idA")
 @Table("Adress")
-@IdName("IdA")
 public class Adress extends Model {
 
     public Adress(){
