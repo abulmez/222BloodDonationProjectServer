@@ -48,6 +48,44 @@ public class PostHandler {
 
     }
 
+    public static String getAllDonationsForAUser(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("=");
+            String idU = params[1];
+            LazyList<Donation> list = Donation.where("IdU=?",idU);
+            String transfer = list.toJson(false);
+            return transfer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String getDonationReport(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("=");
+            String idDR = params[1];
+            DonationReport donationReport = DonationReport.findFirst("IdDR=?",idDR);
+            String transfer = donationReport.toJson(false);
+            System.out.println(transfer);
+            return transfer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
 
     public  static Integer registerHandler(InputStream in ){
         try{
@@ -133,6 +171,52 @@ public class PostHandler {
             Base.close();
         }
     }
+
+    public static void updateCentreHandle(InputStream in){
+//        updateCentre
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            Integer idDC =Integer.parseInt(params[0].split("=")[1]);
+            Integer idA =Integer.parseInt(params[1].split("=")[1]);
+            String centerName = params[2].split("=")[1];
+            String phoneNumber=params[3].split("=")[1];
+            DonationCenter.update("IdA=?,CenterName=?,PhoneNumber=?","IdDC=?",idA,centerName,phoneNumber,idDC);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static void updateHospitalHandle(InputStream in){
+        //updateHospital
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            Integer idH =Integer.parseInt(params[0].split("=")[1]);
+            Integer idA =Integer.parseInt(params[1].split("=")[1]);
+            String hospitalName = params[2].split("=")[1];
+            String phoneNumber=params[3].split("=")[1];
+            System.out.println(line);
+            Hospital.update("IdA=?,HospitalName=?,PhoneNumber=?","IdH=?",idA,hospitalName,phoneNumber,idH);
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            Base.close();
+        }
+    }
+
 
     public static void addAdmin(InputStream in){
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
@@ -714,6 +798,56 @@ public class PostHandler {
         }
     }
 
+    public static DonationCenter addCentreHandler(InputStream in){
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line=reader.readLine();
+            DonationCenter dc = new DonationCenter();
+            String[] argumente = line.split("&");
+            String[] idA = argumente[0].split("=");
+            Integer idANumber = Integer.parseInt(idA[1]);
+            String[] name = argumente[1].split("=");
+            String nameCentre = name[1];
+            String[] phone = argumente[2].split("=");
+            String phoneCentre = phone[1];
+            dc.set("IdA",idANumber).set("CenterName",nameCentre).set("PhoneNumber",phoneCentre).saveIt();
+            return dc;
+        }catch(IOException e){
+            e.printStackTrace();
+            return null;
+        }
+        finally{
+            Base.close();
+        }
+    }
+
+    public static Hospital addHospitalHandler(InputStream in){
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line=reader.readLine();
+            Hospital dc = new Hospital();
+            String[] argumente = line.split("&");
+            String[] idA = argumente[0].split("=");
+            Integer idANumber = Integer.parseInt(idA[1]);
+            String[] name = argumente[1].split("=");
+            String nameCentre = name[1];
+            String[] phone = argumente[2].split("=");
+            String phoneCentre = phone[1];
+            dc.set("IdA",idANumber).set("HospitalName",nameCentre).set("PhoneNumber",phoneCentre).saveIt();
+            return dc;
+        }catch(IOException e){
+            e.printStackTrace();
+            return null;
+        }
+        finally{
+            Base.close();
+        }
+    }
+
     public static String addDonationHandler(InputStream in) {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
             Base.open(
@@ -920,6 +1054,54 @@ public class PostHandler {
             Base.close();
         }
     }
+
+    public static void deleteCentreHandle(InputStream in){
+
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line=reader.readLine();
+            System.out.println(line);
+            Integer idDC=Integer.parseInt(line.split("=")[1]);
+            System.out.println(idDC);
+            DonationCenter e = DonationCenter.findFirst("IdDC=?",idDC);
+            System.out.println(e);
+
+            e.delete();
+
+         }catch(Exception e){
+            e.printStackTrace();
+        }
+        finally{
+            Base.close();
+        }
+
+    }
+
+    public static void deleteHospitalHandle(InputStream in){
+        //deleteHospital
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line=reader.readLine();
+            System.out.println(line);
+            Integer IdH=Integer.parseInt(line.split("=")[1]);
+            System.out.println(IdH);
+            Hospital e = Hospital.findFirst("IdH=?",IdH);
+            System.out.println(e);
+
+            e.delete();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        finally{
+            Base.close();
+        }
+    }
+
     public static String vizualizareLivrariHandler(InputStream in){
         try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
             Base.open(
@@ -1021,6 +1203,33 @@ public class PostHandler {
 
             return listBD;
 
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static String donationScheduleHandler(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String idDS = params[0].split("=")[1];
+            String idDC = params[1].split("=")[1];
+            System.out.println(idDS);
+            System.out.println(idDC);
+
+            Gson gson = new Gson();
+
+            LazyList<DonationSchedule> list = DonationSchedule.where("IdDC=? AND IdDS=?",idDC,idDS);
+
+            String transfer = list.toJson(false);
+            System.out.println(transfer);
+            return transfer;
         } catch (IOException e) {
             e.printStackTrace();
             return null;

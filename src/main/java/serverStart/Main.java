@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static request.GetHandler.getAdminsHandler;
+import java.util.List;
 
 
 public class Main {
@@ -35,6 +36,33 @@ public class Main {
 
             LazyList<Medic> d = Medic.findAll();
             System.out.println(d.size());
+
+            List<Donor> list = Donor.findAll();
+            for(Donor u:list){
+                System.out.println(u.getIdU()+" "+u.getName()+" "+u.getBirthday()+" "+u.getMail()+" "+u.getPhone()+" "+u.getBloodGroup()+" "+u.getWeight());
+            }
+
+            List<DonationSchedule> donationSchedulesList = DonationSchedule.where("IdDC=? AND IdDS=?",1,1);
+            for(DonationSchedule ds:donationSchedulesList)
+            {
+                System.out.println(ds.getIdDC() + " " + ds.getIdDS() + " " + ds.getAvailableSpots() + " " + ds.getDonationDateTime());
+            }
+
+            List<DonationReport> donationReports = DonationReport.findAll();
+            for(DonationReport dr:donationReports){
+                System.out.println(dr.getIdDR() + " " + dr.getSamplingDate() + " " + dr.getBloodStatus() + " " + dr.getBloodReport());
+            }
+
+            List<Hospital> hospitals = Hospital.findAll();
+            for(Hospital hospital:hospitals){
+                System.out.println(hospital.getIdA().toString() + " " + hospital.getIdH().toString() + " " + hospital.getHospitalName() + " " + hospital.getPhoneNumber() );
+            }
+
+            List<DonationCenter> donationCenters = DonationCenter.findAll();
+            for(DonationCenter donation:donationCenters)
+            {
+                System.out.println(donation.getCenterName() + donation.getPhoneNumber());
+            }
             LazyList<UserLoginData> l2 = UserLoginData.findAll();
             System.out.println(l2.size());
             LazyList<Donation> l3 = Donation.findAll();
@@ -44,13 +72,13 @@ public class Main {
             for(BloodDemand asd: l4){
                 System.out.println(asd.getQuantity());
             }
-            /*
-            String bla = l4.toJson(false);
-            System.out.println(bla);
-            Gson gson = new Gson();
-            Type collectionType = new TypeToken<Collection<BloodDemand2>>(){}.getType();
-            Collection<BloodDemand2> arrayList = gson.fromJson(bla,collectionType);
-               */
+
+//            String bla = l4.toJson(false);
+//            System.out.println(bla);
+//            Gson gson = new Gson();
+//            Type collectionType = new TypeToken<Collection<BloodDemand2>>(){}.getType();
+//            Collection<BloodDemand2> arrayList = gson.fromJson(bla,collectionType);
+//
             LazyList<Adress> l6 = Adress.findAll();
             System.out.println(l6.size());
 

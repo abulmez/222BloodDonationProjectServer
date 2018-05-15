@@ -1,27 +1,28 @@
 package model;
 
+
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.Table;
 
-import java.time.LocalDate;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Table("DonationReport")
-public class DonationReport extends Model {
-    public DonationReport(){};
+public class DonationReport  extends Model {
+    public DonationReport(){
 
-    public DonationReport(Integer idDR, LocalDate samplingDate, Boolean bloodStatus, String bloodReport) {
-        set("IdDR",idDR);
+    }
+
+    public void setBloodStatus(Boolean status){
+        set("BloodStatus",status);
+    }
+
+    public void setBloodReport(String report){
+        set("BloodReport",report);
+    }
+
+    public void setSamplingDate(Timestamp samplingDate){
         set("SamplingDate",samplingDate);
-        set("BloodStatus",bloodStatus);
-        set("BloodReport",bloodReport);
-    }
-
-    public Integer getIdDR(){
-        return (Integer)get("IdDR");
-    }
-
-    public LocalDate getSamplingDate(){
-        return (LocalDate)get("SamplingDate");
     }
 
     public Boolean getBloodStatus(){
@@ -30,6 +31,19 @@ public class DonationReport extends Model {
 
     public String getBloodReport(){
         return (String)get("BloodReport");
+    }
+
+    public LocalDate getSamplingDate(){
+        Date data = (Date)get("SamplingDate");
+        return data.toLocalDate();
+    }
+
+    public void setIdDR(Integer iddr){
+        set("IdDR",iddr);
+    }
+
+    public Integer getIdDR(){
+        return (Integer)get("IdDR");
     }
 
 }
