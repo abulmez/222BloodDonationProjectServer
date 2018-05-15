@@ -33,5 +33,5 @@ public class AvailableBloodProducts extends Model {
 
     public Date getValidUntil(){return (Date)get("ValidUntil");};
 
-    public Double getQuantity(){return (Double)get("Quantity");};
+    public Double getQuantity(){return Double.parseDouble(get("Quantity").toString());};
 }
