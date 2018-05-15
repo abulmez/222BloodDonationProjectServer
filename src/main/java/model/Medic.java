@@ -6,7 +6,7 @@ import org.javalite.activejdbc.annotations.Table;
 import java.time.LocalDate;
 
 @IdName("idH")
-@Table("Users")
+@Table("Users ")
 public class Medic extends User {
     public Medic(){}
 

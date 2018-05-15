@@ -5,7 +5,7 @@ import org.javalite.activejdbc.annotations.Table;
 
 import java.time.LocalDate;
 
-@Table("Users  ")
+@Table("Users   ")
 @IdName("IdU")
 public class Donor extends User {
 
