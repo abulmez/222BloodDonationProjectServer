@@ -7,11 +7,18 @@ import com.sun.net.httpserver.HttpServer;
 import model.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
+import org.javalite.common.JsonHelper;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import request.BaseHandler;
 
 import java.lang.reflect.Type;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
+
+import static request.GetHandler.getAdminsHandler;
 
 
 public class Main {
@@ -50,9 +57,16 @@ public class Main {
 
             LazyList<Donor> l5 = Donor.findAll();
             System.out.println(l5.size());
-
-            LazyList<Donor> l7 = Donor.findAll();
-            System.out.println(l7.size());
+            LazyList <Admin> l8 = Admin.findAll();
+            System.out.println(l8.size());
+            LazyList <TCP> l9 = TCP.findAll();
+            System.out.println(l9.size());
+            System.out.println();
+            try {
+                Medic.update("IdH=?", "CNP=?", 10, "1234567890123");
+            }catch (Exception e){
+                System.out.println("banana");
+            }
 
             HttpServer server = HttpServer.create(new InetSocketAddress("localhost",14423), 0);
             //Create the context for the server.

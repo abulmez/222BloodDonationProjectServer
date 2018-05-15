@@ -18,6 +18,9 @@ public class Hospital extends Model {
         set("PhoneNumber", phoneNumber);
     }
 
+    public Integer getIdH(){
+        return (Integer)get("IdH");
+    }
 
     public Integer getIdA(){
         return (Integer)get("IdA");

@@ -21,4 +21,10 @@ public class TCP extends User {
         return (Integer)get("IdDc");
     }
 
+    public void setIdDC(Integer idDC){
+        set("IdDC", idDC);
+    }
+
+    public Integer getIdA(){return (Integer)get("IdA");}
+
 }

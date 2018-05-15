@@ -17,6 +17,22 @@ public class UserLoginData extends Model {
         return (Integer)get("IdLD");
     }
 
+    public void setId(Integer id){
+        set("IdLD", id);
+    }
+
+    public void setUsername(String username){
+        set("Username",username);
+    }
+
+    public void setPassword(String password){
+        set("Password",password);
+    }
+
+    public void setType(String type){
+        set("UserType",type);
+    }
+
     public String getUsername(){
         return (String)get("Username");
     }
