@@ -22,7 +22,10 @@ public class Donor extends User {
     }
 
     public Double getWeight(){
-        return Double.parseDouble( get("Weight").toString());
+        if(get("Weight")!=null){
+            return Double.parseDouble( get("Weight").toString());
+        }
+        return null;
     }
 
     public Integer getIdA(){return (Integer)get("IdA");}

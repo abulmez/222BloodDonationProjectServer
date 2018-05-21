@@ -5,7 +5,6 @@ import org.javalite.activejdbc.annotations.IdName;
 import org.javalite.activejdbc.annotations.Table;
 @IdName("IdDC")
 @Table("DonationCenter")
-@IdName("IdDC")
 public class DonationCenter extends Model {
 
     private Integer idDC;

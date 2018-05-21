@@ -6,6 +6,7 @@ import org.javalite.activejdbc.annotations.Table;
 
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Table("DonationReport")
 public class DonationReport  extends Model {
