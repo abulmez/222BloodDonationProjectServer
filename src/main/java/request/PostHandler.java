@@ -1008,12 +1008,12 @@ public class PostHandler {
                 return null;
             for(BloodDemand d:list){
                 suma=0.0;
-                List<Donation> donations=Donation.findBySQL("SELECT Donation.* FROM BloodDemand, BloodProductsShippment" +
-                        ", AvailableBloodProducts, Donation WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
-                        "AND AvailableBloodProducts.IdD=Donation.IdD AND BloodDemand.IdBd="+d.getIdBd());
+                List<AvailableBloodProducts> donations=AvailableBloodProducts.findBySQL("SELECT AvailableBloodProducts.* FROM BloodDemand, BloodProductsShippment" +
+                        ", AvailableBloodProducts WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
+                        " AND BloodDemand.IdBd="+d.getIdBd());
 
 
-                for(Donation don : donations){
+                for(AvailableBloodProducts don : donations){
                     suma=suma+don.getQuantity();
                 }
                 if(Math.abs(suma-d.getQuantity())<=0.0000001)
@@ -1144,12 +1144,12 @@ public class PostHandler {
                 return null;
             for(BloodDemand d:list){
                 suma=0.0;
-                List<Donation> donations=Donation.findBySQL("SELECT Donation.* FROM BloodDemand, BloodProductsShippment" +
-                        ", AvailableBloodProducts, Donation WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
-                        "AND AvailableBloodProducts.IdD=Donation.IdD AND BloodDemand.IdBd="+d.getIdBd());
+                List<AvailableBloodProducts> donations=AvailableBloodProducts.findBySQL("SELECT AvailableBloodProducts.* FROM BloodDemand, BloodProductsShippment" +
+                        ", AvailableBloodProducts WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
+                        "AND BloodDemand.IdBd="+d.getIdBd());
 
 
-                for(Donation don : donations){
+                for(AvailableBloodProducts don : donations){
                     suma=suma+don.getQuantity();
                 }
                 if(Math.abs(suma-d.getQuantity())<=0.0000001)
@@ -1187,12 +1187,12 @@ public class PostHandler {
                 return null;
             for(BloodDemand d:list){
                 suma=0.0;
-                List<Donation> donations=Donation.findBySQL("SELECT Donation.* FROM BloodDemand, BloodProductsShippment" +
+                List<AvailableBloodProducts> donations=AvailableBloodProducts.findBySQL("SELECT AvailableBloodProducts.* FROM BloodDemand, BloodProductsShippment" +
                         ", AvailableBloodProducts, Donation WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
-                        "AND AvailableBloodProducts.IdD=Donation.IdD AND BloodDemand.IdBd="+d.getIdBd());
+                        "AND BloodDemand.IdBd="+d.getIdBd());
 
 
-                for(Donation don : donations){
+                for(AvailableBloodProducts don : donations){
                     suma=suma+don.getQuantity();
                 }
                 if(Math.abs(suma-d.getQuantity())<=0.0000001)

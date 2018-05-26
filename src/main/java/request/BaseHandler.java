@@ -128,7 +128,7 @@ public class BaseHandler implements HttpHandler {
 
             List<BloodDemandDTO> list=PostHandler.findDemands(t.getRequestBody());
             String response="";
-            if(list!=null){
+            if(list!=null && list.size()>0){
                 Gson g=new Gson();
                 response=g.toJson(list);
 
@@ -185,7 +185,7 @@ public class BaseHandler implements HttpHandler {
 
             List<BloodDemandDTO> list=PostHandler.cereriPlasateHandler(t.getRequestBody());
             String response="";
-            if(list!=null){
+            if(list!=null && list.size()>0){
                 Gson g=new Gson();
                 response=g.toJson(list);
 
@@ -205,7 +205,7 @@ public class BaseHandler implements HttpHandler {
 
             List<BloodDemandDTO> list=PostHandler.cereriLivrateHandler(t.getRequestBody());
             String response="";
-            if(list!=null){
+            if(list!=null && list.size()>0){
                 Gson g=new Gson();
                 response=g.toJson(list);
 
