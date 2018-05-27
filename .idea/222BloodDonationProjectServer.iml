@@ -18,7 +18,6 @@
     <orderEntry type="library" scope="TEST" name="Maven: org.codehaus.jackson:jackson-core-asl:1.8.2" level="project" />
     <orderEntry type="library" name="mssql-jdbc-6.4.0.jre9" level="project" />
     <orderEntry type="library" name="mssql-jdbc-6.2.2.jre84" level="project" />
-    <orderEntry type="library" name="Maven: org.json:json:20160810" level="project" />
     <orderEntry type="library" name="Maven: org.javalite:activejdbc:1.4.13" level="project" />
     <orderEntry type="library" name="Maven: org.javalite:javalite-common:1.4.13" level="project" />
     <orderEntry type="library" name="Maven: org.javalite:app-config:1.4.13" level="project" />

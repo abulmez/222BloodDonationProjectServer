@@ -1091,4 +1091,27 @@ public class PostHandler {
             Base.close();
         }
     }
+
+    public static LazyList<DonationCenter> currentReservationDC(InputStream requestBody) {
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody));
+            String line = reader.readLine();
+            Integer id = Integer.parseInt(line);
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            LazyList<DonationCenter> lazyList= DonationCenter.findBySQL("select DonationCenter.* from DonationCenter " +
+                    "INNER JOIN  DonationSchedule ON DonationSchedule.IdDC=DonationCenter.IdDC " +
+                    "INNER JOIN  Reservation ON Reservation.IdDS = DonationSchedule.IdDS " +
+                    "INNER JOIN Users ON Users.IdU=Reservation.IdU WHERE Users.IdU="+id);
+            System.out.println("Magie1"+lazyList.size());
+            return lazyList;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
 }
