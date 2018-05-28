@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import model.*;
 import model.DTO.BloodProductShipmentAddressDTO;
 import model.DTO.BloodRequestHospitalDTO;
+import model.DTO.DonationCenterDTO;
 import model.DTO.DonationReceiverNameBloodGroupDTO;
 import model.*;
 import org.javalite.activejdbc.Base;
@@ -182,9 +183,37 @@ public class GetHandler {
             Integer idU = Integer.parseInt(line.split("=")[1]);
             Integer idDC = (Integer)TCP.findById(idU).get("IdDC");
             String sqlQuerry = String.format("SELECT abp.IdBP,abp.IdD,abp.ProductType,abp.ValidUntil,abp.Quantity FROM AvailableBloodProducts abp INNER JOIN Donation d on abp.IdD = d.IdD INNER JOIN DonationCenter dc on d.IdDC = dc.IdDC WHERE dc.IdDC = %s AND abp.Deleted = 0 ",idDC);
-
             LazyList<AvailableBloodProducts> products = AvailableBloodProducts.findBySQL(sqlQuerry);
             return products.toJson(false);
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
+
+    public static List<DonationCenterDTO> getAllAvailableBloodProductsFromCenters(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            List<DonationCenter> centers=DonationCenter.findAll();
+            List<DonationCenterDTO> donationCenters=new ArrayList<>();
+            for(DonationCenter d: centers){
+                Adress a=Adress.findById(d.getIdA());
+                String adress=a.getCountry()+" "+a.getCity()+" "+a.getStreet()+" "+a.getStreetNr();
+                String sqlQuerry = String.format("SELECT abp.IdBP,abp.IdD,abp.ProductType,abp.ValidUntil,abp.Quantity FROM AvailableBloodProducts abp INNER JOIN Donation d on abp.IdD = d.IdD INNER JOIN DonationCenter dc on d.IdDC = dc.IdDC WHERE dc.IdDC = %s AND abp.Deleted = 0 ",d.getIdDC());
+                List<AvailableBloodProducts> products = AvailableBloodProducts.findBySQL(sqlQuerry);
+                for(AvailableBloodProducts product : products){
+                    Donation don=Donation.findById(product.getIdD());
+                    Donor donor=Donor.findById(don.getIdU());
+                    donationCenters.add(new DonationCenterDTO(donor.getBloodGroup(),don.getReceiverName(),product.getIdD(),product.getIdBP(),d.getCenterName(),d.getPhoneNumber(),adress,product.getProductType(),product.getValidUntil(),product.getQuantity()));
+                }
+            }
+            return donationCenters;
         }catch (Exception e){
             e.printStackTrace();
             return null;
@@ -342,6 +371,28 @@ public class GetHandler {
 
             TCP tcp = TCP.findById(idTCP);
             return tcp.getIdDC();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
+    public static String getAdresaSpital(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            Integer idU = Integer.parseInt( line.split("=")[1]);
+            LazyList<Medic> list1= Medic.where("IdU = ?",idU);
+            Integer idH=list1.get(0).getIdH();
+            Hospital h=Hospital.findById(idH);
+            Integer idA=h.getIdA();
+            Adress a=Adress.findById(idA);
+            String adress=a.getCountry()+" "+a.getCity()+" "+a.getStreet()+" "+a.getStreetNr();
+            return adress;
         }catch (Exception e){
             e.printStackTrace();
             return null;

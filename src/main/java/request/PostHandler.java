@@ -1178,7 +1178,7 @@ public class PostHandler {
                 for(AvailableBloodProducts don : donations){
                     suma=suma+don.getQuantity();
                 }
-                if(Math.abs(suma-d.getQuantity())<=0.0000001)
+                if(Math.abs(suma-d.getQuantity())<=0.0000001 || suma-d.getQuantity()>=0.0000001)
                     listBD.add(new BloodDemandDTO(d,suma,"Livrata"));
                 else if(!(suma.equals(0.0)))
                     listBD.add(new BloodDemandDTO(d,suma,"Initiata"));
@@ -1270,7 +1270,7 @@ public class PostHandler {
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             String line=reader.readLine();
-
+            Integer ok=0;
             Integer idBd=Integer.parseInt(line.split("=")[1]);
             List<DonationCenter> donations=DonationCenter.findBySQL("SELECT DonationCenter.* FROM BloodDemand, BloodProductsShippment" +
                     ", AvailableBloodProducts, Donation,DonationCenter WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
@@ -1278,9 +1278,15 @@ public class PostHandler {
             String centre="Centrele de la care s-au primit donatii: ";
             for(DonationCenter dc : donations){
                 centre=centre+dc.getCenterName()+", "+dc.getPhoneNumber()+"; ";
+                ok=1;
             }
+            if(ok==0){
+                return "";
+            }
+            else{
             centre=centre.substring(0, centre.length()-2);
             return centre;
+            }
         }catch(Exception e){
             e.printStackTrace();
             return null;
