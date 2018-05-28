@@ -55,6 +55,24 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/currentReservationDC")){
+            LazyList<DonationCenter>donationCenters =  PostHandler.currentReservationDC(t.getRequestBody());
+            String response;
+            System.out.print("Magie2"+donationCenters.size());
+            if(donationCenters.size() != 0){
+                response=donationCenters.toJson(true);
+                System.out.println("MULTA MULTA MAGIE" +"\n===============\n"+response);
+                t.sendResponseHeaders(200,response.length());
+
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addBloodDemand")){
             BloodDemand demand=PostHandler.addDemandHandler(t.getRequestBody());
@@ -68,6 +86,21 @@ public class BaseHandler implements HttpHandler {
                 t.sendResponseHeaders(423,response.length());
             }
             OutputStream os=t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/emailsForBloodType")){
+            List<String> emails=GetHandler.getEmailsForBloodType(t.getRequestBody());
+            String response;
+            if(emails.size() != 0){
+                response = new Gson().toJson(emails);
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                response="no";
+                t.sendResponseHeaders(401, response.length());
+            }
+            OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
             os.close();
         }
@@ -916,11 +949,6 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
-
-
-
-
-
 
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/donations"))

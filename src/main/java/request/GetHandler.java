@@ -462,5 +462,26 @@ public class GetHandler {
         }
     }
 
-
+    public static List<String> getEmailsForBloodType(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String bloodType =line.split("=")[1];
+            LazyList<UserPacient> userPacients = UserPacient.findAll();
+            List<String> emails = new ArrayList<>();
+            for (UserPacient userPacient:userPacients) {
+                if(userPacient.getBloodGroup()!=null && userPacient.getBloodGroup().equalsIgnoreCase(bloodType))
+                    emails.add(userPacient.getMail());
+            }
+            return emails;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
 }
