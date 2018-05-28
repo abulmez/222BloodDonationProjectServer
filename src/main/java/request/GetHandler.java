@@ -282,6 +282,39 @@ public class GetHandler {
         }
     }
 
+
+    public static LazyList<DonationSchedule> getAllDonationSchedules(InputStream requestBody){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] reqResponse = line.split("&");
+            Integer year = Integer.parseInt(reqResponse[0].split("=")[1]);
+            Integer month = Integer.parseInt(reqResponse[1].split("=")[1]);
+            Integer day = Integer.parseInt(reqResponse[2].split("=")[1]);
+            System.out.println(year);
+            System.out.println(month);
+            System.out.println(day);
+
+            String query = String.format("SELECT D.IdDS,D.IdDC,D.DonationDateTime ,D.AvailableSpots - (SELECT Count(*) " +
+                    "FROM DonationSchedule AS DS INNER JOIN Reservation RS ON DS.IdDS = RS.IdDS AND D.IdDS = RS.IdDS" +
+                    ") as AvailableSpots" +
+                    " FROM DonationSchedule AS D WHERE YEAR(D.DonationDateTime)=%s AND month(D.DonationDateTime)=%s AND day(D.DonationDateTime) =%s",year,month,day);
+
+            LazyList<DonationSchedule> donationScheduleLazyList = DonationSchedule.findBySQL(query);
+            System.out.println(donationScheduleLazyList);
+            return donationScheduleLazyList;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+
+    }
+
     public static String getAllBloodProductShipmentForDonationCenter(InputStream requestBody) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             ArrayList<BloodProductShipmentAddressDTO> bloodProductShipmentAddressDTOs = new ArrayList<>();
@@ -342,6 +375,29 @@ public class GetHandler {
 
             TCP tcp = TCP.findById(idTCP);
             return tcp.getIdDC();
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
+
+    public static Integer setAvailableSpots(InputStream requestBody){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            Integer IdDS = Integer.parseInt( line.split("=")[1]);
+            String query = String.format("SELECT D.IdDS,D.IdDC,D.DonationDateTime ,D.AvailableSpots - (SELECT Count(*) " +
+                    "FROM DonationSchedule AS DS INNER JOIN Reservation RS ON DS.IdDS = RS.IdDS AND D.IdDS = RS.IdDS" +
+                    " ) as AvailableSpots" +
+                    " FROM DonationSchedule AS D WHERE D.IdDS=%s",IdDS);
+            LazyList<DonationSchedule> donationSchedule = DonationSchedule.findBySQL(query);
+            System.out.println(donationSchedule);
+            return donationSchedule.get(0).getAvailableSpots();
         }catch (Exception e){
             e.printStackTrace();
             return null;

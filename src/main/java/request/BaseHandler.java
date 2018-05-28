@@ -241,6 +241,16 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addAdress"))
+        {
+            PostHandler.addAdressHandler(t.getRequestBody());
+            String response = "raspuns";
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/adress")){
             PostHandler.adressHandler(t.getRequestBody());
             String response="raspuns";
@@ -268,6 +278,17 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/deleteReservation"))
+        {
+            PostHandler.deleteReservation(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getUsernames")){
             String response=PostHandler.getUsernames(t.getRequestBody());
@@ -482,6 +503,20 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addReservation")){
+            String response = PostHandler.addReservation(t.getRequestBody());
+            if(response.equals("Success")){
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                t.sendResponseHeaders(422, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/modifyDonation")){
             String response = PostHandler.modifyDonationHandler(t.getRequestBody());
@@ -733,6 +768,26 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getAllDonationSchedules"))
+        {
+            LazyList<DonationSchedule> donationSchedules = GetHandler.getAllDonationSchedules(t.getRequestBody());
+
+            String response;
+
+            if(donationSchedules.size() != 0){
+                response=donationSchedules.toJson(false);
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/deleteBloodProduct")) {
 
             String response = "";
@@ -789,6 +844,22 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/setAvailableSpots")) {
+
+            String response = "";
+            Integer idDC = GetHandler.setAvailableSpots(t.getRequestBody());
+            if (idDC != null) {
+                response = idDC.toString();
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/splitBloodProduct")) {
 

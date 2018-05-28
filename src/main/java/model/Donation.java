@@ -42,4 +42,5 @@ public class Donation extends Model {
     public String getReceiverName(){
         return (String)get("ReceiverName");
     }
+
 }
