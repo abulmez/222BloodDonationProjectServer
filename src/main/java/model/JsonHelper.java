@@ -40,7 +40,7 @@ public class JsonHelper {
         LocalDate birtday = LocalDate.of(year,month,day);
         String email = jsonObject.get("mail").getAsString();
         String phone = jsonObject.get("phone").getAsString();
-        String bloodGroup = jsonObject.get("bloodGroup").getAsString();
+        String bloodGroup = jsonObject.get("bloodgroup").getAsString();
         Double weight = jsonObject.get("weight").getAsDouble();
         Donor donor = new Donor(cnp,name,birtday,email,phone,bloodGroup,weight);
         return donor;
