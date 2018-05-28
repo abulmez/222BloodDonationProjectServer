@@ -23,12 +23,15 @@ import org.javalite.activejdbc.LazyList;
 
 public class GetHandler {
 
-    public static List<DonationDTO> getDonationsHandler() {
-        try {
+    public static List<DonationDTO> getDonationsHandler(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
-            List<DonationDTO> donations = DTOutils.getDTOs(Donation.findAll());
+            String line = reader.readLine();
+            Integer idU = Integer.parseInt(line.split("=")[1]);
+            TCP tcp=TCP.findFirst("IdU = ?",idU);
+            List<DonationDTO> donations = DTOutils.getDTOs(Donation.where("IdDC = ?",tcp.get("IdDC")));
             System.out.println("Donations size:" + donations.size());
             return donations;
 
@@ -55,6 +58,25 @@ public class GetHandler {
             for (Donor d:lazy)
                 System.out.println(d.getIdU());
             return lazy;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static Donor getDonorFromDonationHandler(InputStream requestBody) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            Integer idD = Integer.parseInt(line.split("=")[1]);
+            Donation donation=Donation.findFirst("IdD = ?",idD);
+            Donor donor=Donor.findFirst("IdU = ?",donation.getIdU());
+            System.out.println(donor);
+            return donor;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -388,4 +410,6 @@ public class GetHandler {
             Base.close();
         }
     }
+
+
 }
