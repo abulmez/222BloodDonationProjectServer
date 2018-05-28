@@ -207,10 +207,13 @@ public class GetHandler {
                 String adress=a.getCountry()+" "+a.getCity()+" "+a.getStreet()+" "+a.getStreetNr();
                 String sqlQuerry = String.format("SELECT abp.IdBP,abp.IdD,abp.ProductType,abp.ValidUntil,abp.Quantity FROM AvailableBloodProducts abp INNER JOIN Donation d on abp.IdD = d.IdD INNER JOIN DonationCenter dc on d.IdDC = dc.IdDC WHERE dc.IdDC = %s AND abp.Deleted = 0 ",d.getIdDC());
                 List<AvailableBloodProducts> products = AvailableBloodProducts.findBySQL(sqlQuerry);
-                for(AvailableBloodProducts product : products){
-                    Donation don=Donation.findById(product.getIdD());
-                    Donor donor=Donor.findById(don.getIdU());
-                    donationCenters.add(new DonationCenterDTO(donor.getBloodGroup(),don.getReceiverName(),product.getIdD(),product.getIdBP(),d.getCenterName(),d.getPhoneNumber(),adress,product.getProductType(),product.getValidUntil(),product.getQuantity()));
+                for(AvailableBloodProducts product : products) {
+                    List<BloodProductsShippment> listBPS = BloodProductsShippment.where("IdBP = ?", product.getIdBP());
+                    if (listBPS.size() == 0) {
+                        Donation don = Donation.findById(product.getIdD());
+                        Donor donor = Donor.findById(don.getIdU());
+                        donationCenters.add(new DonationCenterDTO(donor.getBloodGroup(), don.getReceiverName(), product.getIdD(), product.getIdBP(), d.getCenterName(), d.getPhoneNumber(), adress, product.getProductType(), product.getValidUntil(), product.getQuantity()));
+                    }
                 }
             }
             return donationCenters;
