@@ -492,7 +492,7 @@ public class BaseHandler implements HttpHandler {
 
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonations")){
-            List<DonationDTO> donations=GetHandler.getDonationsHandler();
+            List<DonationDTO> donations=GetHandler.getDonationsHandler(t.getRequestBody());
             String response;
 
             if(donations.size() != 0){
@@ -509,6 +509,25 @@ public class BaseHandler implements HttpHandler {
             os.close();
 
         }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonorFromDonation")){
+            Donor donor=GetHandler.getDonorFromDonationHandler(t.getRequestBody());
+            String response;
+            if(donor != null){
+                response = donor.toJson(false);
+                System.out.println(response);
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                response="nop";
+                t.sendResponseHeaders(401, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+
+        }
+
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonors")){
             LazyList<Donor> donors=GetHandler.getDonorsHandler();
