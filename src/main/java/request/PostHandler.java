@@ -1313,7 +1313,6 @@ public class PostHandler {
                     "INNER JOIN  DonationSchedule ON DonationSchedule.IdDC=DonationCenter.IdDC " +
                     "INNER JOIN  Reservation ON Reservation.IdDS = DonationSchedule.IdDS " +
                     "INNER JOIN Users ON Users.IdU=Reservation.IdU WHERE Users.IdU="+id);
-            System.out.println("Magie1"+lazyList.size());
             return lazyList;
         }catch (Exception e){
             e.printStackTrace();

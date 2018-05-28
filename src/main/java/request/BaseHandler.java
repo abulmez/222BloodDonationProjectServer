@@ -88,6 +88,21 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/emailsForBloodType")){
+            List<String> emails=GetHandler.getEmailsForBloodType(t.getRequestBody());
+            String response;
+            if(emails.size() != 0){
+                response = new Gson().toJson(emails);
+                t.sendResponseHeaders(200, response.length());
+            }
+            else{
+                response="no";
+                t.sendResponseHeaders(401, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/addCentre")){
             DonationCenter dc = PostHandler.addCentreHandler(t.getRequestBody());
@@ -830,11 +845,6 @@ public class BaseHandler implements HttpHandler {
             os.write(response.getBytes());
             os.close();
         }
-
-
-
-
-
 
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/donations"))
