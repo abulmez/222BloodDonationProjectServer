@@ -148,16 +148,14 @@ public class BaseHandler implements HttpHandler {
 
             String list=PostHandler.vizualizareLivrariHandler(t.getRequestBody());
             String response="";
-            if(list!=null){
+            if(!list.equals("")){
                 response=String.format(list);
-
-                t.sendResponseHeaders(200,response.length());
             }
             else
             {
-                response=String.format("Eroare la incarcarea tabelului");
-                t.sendResponseHeaders(422,response.length());
+                response=String.format("Eroare la incarcarea livrarilor");
             }
+            t.sendResponseHeaders(200,response.length());
             OutputStream os=t.getResponseBody();
             os.write(response.getBytes());
             os.close();
