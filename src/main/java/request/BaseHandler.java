@@ -7,6 +7,7 @@ import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.*;
+import model.DTO.DonationCenterDTO;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.activejdbc.LazyList;
 import utils.DonationDTO;
@@ -189,6 +190,25 @@ public class BaseHandler implements HttpHandler {
                 Gson g=new Gson();
                 response=g.toJson(list);
 
+                t.sendResponseHeaders(200,response.length());
+            }
+            else
+            {
+                response=String.format("Eroare la incarcarea tabelului");
+                t.sendResponseHeaders(422,response.length());
+            }
+            OutputStream os=t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/productsFromCenters")){
+
+            List<DonationCenterDTO> list=GetHandler.getAllAvailableBloodProductsFromCenters(t.getRequestBody());
+            String response="";
+            if(list!=null && list.size()>0){
+                Gson g=new Gson();
+                response=g.toJson(list);
                 t.sendResponseHeaders(200,response.length());
             }
             else
@@ -701,6 +721,21 @@ public class BaseHandler implements HttpHandler {
                 os.write(response.getBytes());
                 os.close();
             }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getAdresaSpital")) {
+
+            String response = "";
+            String donationsDTOJson = GetHandler.getAdresaSpital(t.getRequestBody());
+            if (donationsDTOJson != null) {
+                response = donationsDTOJson;
+                t.sendResponseHeaders(200, response.length());
+            } else {
+                t.sendResponseHeaders(404, response.length());
+            }
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
 
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getAllBloodRequestsAndHospitalInfoForProductTypeAndGroup")) {
