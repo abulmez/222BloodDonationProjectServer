@@ -89,7 +89,8 @@ public class Main {
             System.out.println(l8.size());
             LazyList <TCP> l9 = TCP.findAll();
             System.out.println(l9.size());
-            System.out.println();
+
+
             try {
                 Medic.update("IdH=?", "CNP=?", 10, "1234567890123");
             }catch (Exception e){

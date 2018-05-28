@@ -340,19 +340,19 @@ public class PostHandler {
             String line = reader.readLine();
             String[] params = line.split("&");
             String type = params[0].split("=")[1];
-            List<Integer> list=new ArrayList<>();
+            List<String> list=new ArrayList<>();
             Gson gson=new Gson();
             if (type.equals("Medic")){
                 List<Hospital> hospitals=Hospital.findAll();
                 for (Hospital h:hospitals)
-                    list.add(h.getIdH());
+                    list.add(h.getIdH()+"."+h.getHospitalName());
                 String transfer=gson.toJson(list);
                 return transfer;
             }
             else if(type.equals("TCP")) {
                 List<DonationCenter> centers = DonationCenter.findAll();
                 for (DonationCenter c : centers)
-                    list.add(c.getIdDC());
+                    list.add(c.getIdDC()+"."+c.getCenterName());
                 String transfer = gson.toJson(list);
                 return transfer;
             }
@@ -360,6 +360,24 @@ public class PostHandler {
         } catch (IOException e) {
             e.printStackTrace();
             return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static void updateUsername(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String username = params[0].split("=")[1];
+            String cnp = params[1].split("=")[1];
+            Admin a=Admin.findFirst("CNP=?",cnp);
+            UserLoginData.update("Username=?","IdLD=?",username,a.getIdU());
+        } catch (IOException e) {
+            e.printStackTrace();
         } finally {
             Base.close();
         }
@@ -454,6 +472,28 @@ public class PostHandler {
         } finally {
             Base.close();
         }
+    }
+
+    public static String getAddress (InputStream in) {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+                Base.open(
+                        "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                        "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+                String line = reader.readLine();
+                String[] params = line.split("&");
+                String cnp = params[0].split("=")[1];
+                //System.out.println(cnp);
+                List<Admin> admin = Admin.where("CNP=?", cnp);
+                List<Adress> address = Adress.where("IdA=?",admin.get(0).getIdA() );
+                Adress a = address.get(0);
+                String send=String.format("ida=%s&street=%s&streetNr=%s&blockNr=%s&entrance=%s&floor=%s&apartNr=%s&city=%s&county=%s&country=%s",a.getIdA(), a.getStreet(), Integer.toString(a.getStreetNr()), Integer.toString(a.getBlock()), a.getEntrance(), Integer.toString(a.getFloor()), Integer.toString(a.getApartNr()), a.getCity(), a.getCounty(), a.getCountry());
+                return send;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            } finally {
+                Base.close();
+            }
     }
 
     public static String fieldsHandler(InputStream in) {
@@ -594,6 +634,30 @@ public class PostHandler {
         }
     }
 
+    public static String checkCnp(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            List<Admin> users=Admin.where("CNP=?",cnp);
+            String response="";
+            if(users.size()==0)
+                response="ok";
+            else
+                response="no";
+            return response;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
     public static void deleteUser(InputStream in) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Base.open(
@@ -626,12 +690,12 @@ public class PostHandler {
                 Medic medic = Medic.findFirst("CNP = ?", cnp);
                 if (medic.getIdA() != null) {
                     adress = Adress.findFirst("IdA=?", medic.getIdA());
-                    UserLoginData u = UserLoginData.findFirst("IdLD=?", medic.getId());
+                    UserLoginData u = UserLoginData.findFirst("IdLD=?", medic.getIdU());
                     u.delete();
                     medic.delete();
                     adress.delete();
                 } else {
-                    UserLoginData u = UserLoginData.findFirst("IdLD=?", medic.getId());
+                    UserLoginData u = UserLoginData.findFirst("IdLD=?", medic.getIdU());
                     u.delete();
                     medic.delete();
                 }
@@ -721,6 +785,75 @@ public class PostHandler {
             Base.close();
         }
     }
+
+    public static void updateAddress(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String street = params[0].split("=")[1];
+            String streetNr = params[1].split("=")[1];
+            String blockNr = params[2].split("=")[1];
+            String entrance = params[3].split("=")[1];
+            String floor = params[4].split("=")[1];
+            String apartNr = params[5].split("=")[1];
+            String city = params[6].split("=")[1];
+            String county = params[7].split("=")[1];
+            String country = params[8].split("=")[1];
+            String idA=params[9].split("=")[1];
+
+            Adress.update("Street=?,StreetNumber=?,BlockNumber=?,Entrance=?,Floor=?,ApartmentNumber=?,City=?,County=?,Country=?","IdA=?",street,streetNr,blockNr,entrance,floor,apartNr,city,county,country,idA);
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static void addAddress(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String street = params[0].split("=")[1];
+            String streetNr = params[1].split("=")[1];
+            String blockNr = params[2].split("=")[1];
+            String entrance = params[3].split("=")[1];
+            String floor = params[4].split("=")[1];
+            String apartNr = params[5].split("=")[1];
+            String city = params[6].split("=")[1];
+            String county = params[7].split("=")[1];
+            String country = params[8].split("=")[1];
+            String cnp=params[9].split("=")[1];
+            List<Admin> admin = Admin.where("CNP=?", cnp);
+            List<Adress> address = Adress.where("IdA=?",admin.get(0).getIdA() );
+            Adress a=new Adress();
+            a.setStreet(street);
+            a.setStreetNr(Integer.parseInt(streetNr));
+            a.setBlock(Integer.parseInt(blockNr));
+            a.setEntrance(entrance);
+            a.setFloor(Integer.parseInt(floor));
+            a.setApartNr(Integer.parseInt(apartNr));
+            a.setCity(city);
+            a.setCounty(county);
+            a.setCountry(country);
+            a.saveIt();
+            List<Adress> adresses=Adress.where("Street=?",street);
+            int idA=adresses.get(adresses.size()-1).getIdA();
+            Admin.update("IdA=?","IdU=?",idA,admin.get(0).getIdU());
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            Base.close();
+        }
+    }
+
 
     public static void adressHandler(InputStream in) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
@@ -847,6 +980,8 @@ public class PostHandler {
             Base.close();
         }
     }
+
+
 
     public static String addDonationHandler(InputStream in) {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
