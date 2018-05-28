@@ -250,6 +250,26 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateAddress")){
+            PostHandler.updateAddress(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/addAddress")){
+            PostHandler.addAddress(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+
+
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/deleteCentre")){
             PostHandler.deleteCentreHandle(t.getRequestBody());
             String response="raspuns";
@@ -275,11 +295,26 @@ public class BaseHandler implements HttpHandler {
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
             os.close();
+        }
 
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/checkCnp")){
+            String response=PostHandler.checkCnp(t.getRequestBody());
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
         }
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/fields")){
             String response=PostHandler.fieldsHandler(t.getRequestBody());
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/address")){
+            String response=PostHandler.getAddress(t.getRequestBody());
             t.sendResponseHeaders(200, response.length());
             OutputStream os = t.getResponseBody();
             os.write(response.getBytes());
@@ -339,6 +374,15 @@ public class BaseHandler implements HttpHandler {
                 OutputStream os = t.getResponseBody();
                 os.write(response.getBytes());
                 os.close();
+        }
+
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateUsername")){
+            PostHandler.updateUsername(t.getRequestBody());
+            String response="raspuns";
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
         }
 
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/updateAdmin")){
