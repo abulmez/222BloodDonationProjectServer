@@ -658,6 +658,33 @@ public class PostHandler {
         }
     }
 
+    public static String checkAdminId(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String cnp = params[0].split("=")[1];
+            String idU = params[1].split("=")[1];
+            Admin a=Admin.findFirst("CNP=?",cnp);
+            String response="";
+            System.out.println(idU);
+            System.out.println(a.getIdU());
+            if(idU.equals(a.getIdU().toString()))
+                response="no";
+            else
+                response="ok";
+            return response;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
     public static void deleteUser(InputStream in) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Base.open(
