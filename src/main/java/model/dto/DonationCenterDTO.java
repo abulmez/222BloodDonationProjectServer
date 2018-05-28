@@ -1,11 +1,8 @@
-package model.DTO;
+package model.dto;
 
 import com.google.gson.annotations.SerializedName;
-import model.AvailableBloodProducts;
-import model.DonationCenter;
 
 import java.util.Date;
-import java.util.List;
 
 public class DonationCenterDTO {
 

@@ -1,28 +1,16 @@
 package request;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.*;
-import model.DTO.DonationCenterDTO;
-import org.javalite.activejdbc.LazyList;
+import model.dto.DonationCenterDTO;
 import org.javalite.activejdbc.LazyList;
 import utils.DonationDTO;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.lang.reflect.Type;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
-
-import static java.lang.reflect.Modifier.STATIC;
-import static java.lang.reflect.Modifier.TRANSIENT;
 
 public class BaseHandler implements HttpHandler {
     //Handler method

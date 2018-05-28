@@ -1,13 +1,10 @@
 package request;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import model.*;
-import model.DTO.BloodRequestHospitalDTO;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
-import utils.CustomAdminDeserializer;
 
 import java.io.*;
 import java.lang.reflect.Type;

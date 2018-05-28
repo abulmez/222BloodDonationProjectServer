@@ -2,25 +2,20 @@ package request;
 
 import com.google.gson.Gson;
 import model.*;
-import model.DTO.BloodProductShipmentAddressDTO;
-import model.DTO.BloodRequestHospitalDTO;
-import model.DTO.DonationCenterDTO;
-import model.DTO.DonationReceiverNameBloodGroupDTO;
-import model.*;
+import model.dto.BloodProductShipmentAddressDTO;
+import model.dto.BloodRequestHospitalDTO;
+import model.dto.DonationCenterDTO;
+import model.dto.DonationReceiverNameBloodGroupDTO;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 import utils.DTOutils;
 import utils.DonationDTO;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.javalite.activejdbc.Base;
-import org.javalite.activejdbc.LazyList;
 
 public class GetHandler {
 

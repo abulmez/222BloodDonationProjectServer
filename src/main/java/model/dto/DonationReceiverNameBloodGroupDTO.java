@@ -1,4 +1,4 @@
-package model.DTO;
+package model.dto;
 
 public class DonationReceiverNameBloodGroupDTO {
     private Integer idD;
