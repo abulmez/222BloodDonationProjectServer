@@ -65,8 +65,10 @@ public class Main {
             }
             LazyList<UserLoginData> l2 = UserLoginData.findAll();
             System.out.println(l2.size());
+
             LazyList<Donation> l3 = Donation.findAll();
             System.out.println(l3.size());
+            System.out.println(l3);
 
             LazyList<BloodDemand> l4 = BloodDemand.findAll();
             for(BloodDemand asd: l4){
@@ -95,6 +97,11 @@ public class Main {
                 Medic.update("IdH=?", "CNP=?", 10, "1234567890123");
             }catch (Exception e){
                 System.out.println("banana");
+            }
+
+            LazyList<Reservation> list1 = Reservation.findAll();
+            for (Reservation reservation : list1) {
+                System.out.println(reservation);
             }
 
             HttpServer server = HttpServer.create(new InetSocketAddress("localhost",14423), 0);

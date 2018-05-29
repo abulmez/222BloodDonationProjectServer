@@ -878,6 +878,43 @@ public class PostHandler {
         }
     }
 
+    public static void addAdressHandler(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            String street = params[0].split("=")[1];
+            String streetNr = params[1].split("=")[1];
+            String blockNr = params[2].split("=")[1];
+            String entrance = params[3].split("=")[1];
+            String floor = params[4].split("=")[1];
+            String apartNr = params[5].split("=")[1];
+            String city = params[6].split("=")[1];
+            String county = params[7].split("=")[1];
+            String country = params[8].split("=")[1];
+
+                    Adress a=new Adress();
+                    a.setStreet(street);
+                    a.setStreetNr(Integer.parseInt(streetNr));
+                    a.setBlock(Integer.parseInt(blockNr));
+                    a.setEntrance(entrance);
+                    a.setFloor(Integer.parseInt(floor));
+                    a.setApartNr(Integer.parseInt(apartNr));
+                    a.setCity(city);
+                    a.setCounty(county);
+                    a.setCountry(country);
+                    a.saveIt();
+
+            } catch (IOException e) {
+           e.printStackTrace();
+        }finally {
+          Base.close();
+     }
+
+
+}
 
     public static void adressHandler(InputStream in) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
@@ -1091,6 +1128,31 @@ public class PostHandler {
 
     }
 
+    public static String addReservation(InputStream in){
+        try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("&");
+            Integer idDS = Integer.parseInt(params[0].split("=")[1]);
+            Integer IdU=Integer.parseInt(params[1].split("=")[1]);
+            Reservation reservation= new Reservation();
+            reservation.set("IdDS",idDS);
+            reservation.set("IdU",IdU);
+            reservation.set("Status","ATTEMPTING");
+            reservation.insert();
+            return "Success";
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return e.getMessage();
+        }
+        finally {
+            Base.close();
+        }
+    }
+
     public static String modifyDonationHandler(InputStream in) {
         try(BufferedReader reader = new BufferedReader(new InputStreamReader(in))){
             Base.open(
@@ -1214,6 +1276,8 @@ public class PostHandler {
         }
     }
 
+
+
     public static void deleteCentreHandle(InputStream in){
 
         try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
@@ -1251,6 +1315,27 @@ public class PostHandler {
             Hospital e = Hospital.findFirst("IdH=?",IdH);
             System.out.println(e);
 
+            e.delete();
+
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        finally{
+            Base.close();
+        }
+    }
+
+    public static void deleteReservation(InputStream in){
+        try(BufferedReader reader=new BufferedReader(new InputStreamReader(in))){
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line=reader.readLine();
+            System.out.println(line);
+            Integer IdU=Integer.parseInt(line.split("=")[1]);
+            System.out.println(IdU);
+            Reservation e = Reservation.findFirst("IdU=?",IdU);
+            System.out.println(e);
             e.delete();
 
         }catch(Exception e){
@@ -1402,7 +1487,6 @@ public class PostHandler {
             Base.close();
         }
     }
-
 
     public static Boolean deleteBloodProduct(InputStream requestBody) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
