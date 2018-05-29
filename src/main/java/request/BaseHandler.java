@@ -44,11 +44,9 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/currentReservationDC")){
-            LazyList<DonationCenter>donationCenters =  PostHandler.currentReservationDC(t.getRequestBody());
-            String response;
-            System.out.print("Magie2"+donationCenters.size());
-            if(donationCenters.size() != 0){
-                response=donationCenters.toJson(true);
+            String response=  PostHandler.currentReservationDC(t.getRequestBody());
+            //System.out.print("Magie2"+donationCenters.size());
+            if(response!=null){
                 System.out.println("MULTA MULTA MAGIE" +"\n===============\n"+response);
                 t.sendResponseHeaders(200,response.length());
 

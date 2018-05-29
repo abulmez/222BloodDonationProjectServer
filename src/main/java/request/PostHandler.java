@@ -1140,7 +1140,7 @@ public class PostHandler {
             Reservation reservation= new Reservation();
             reservation.set("IdDS",idDS);
             reservation.set("IdU",IdU);
-            reservation.set("Status","ATTEMPTING");
+            //reservation.set("Status","ATTEMPTING");
             reservation.insert();
             return "Success";
 
@@ -1550,7 +1550,7 @@ public class PostHandler {
         }
     }
 
-    public static LazyList<DonationCenter> currentReservationDC(InputStream requestBody) {
+    public static String currentReservationDC(InputStream requestBody) {
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody));
             String line = reader.readLine();
@@ -1562,7 +1562,7 @@ public class PostHandler {
                     "INNER JOIN  DonationSchedule ON DonationSchedule.IdDC=DonationCenter.IdDC " +
                     "INNER JOIN  Reservation ON Reservation.IdDS = DonationSchedule.IdDS " +
                     "INNER JOIN Users ON Users.IdU=Reservation.IdU WHERE Users.IdU="+id);
-            return lazyList;
+            return lazyList.toJson(false);
         }catch (Exception e){
             e.printStackTrace();
             return null;
