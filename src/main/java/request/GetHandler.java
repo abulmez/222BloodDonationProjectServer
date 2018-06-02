@@ -269,6 +269,33 @@ public class GetHandler {
         }
     }
 
+    public static LazyList<Illness> getAllIllnessPacient(InputStream requestBody) {
+        System.out.println("------Get Illness method");
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            Integer idU = Integer.parseInt(line.split("=")[1]);
+            String sqlQuerry = String.format("SELECT * FROM Users u INNER JOIN SuffersOf s ON u.IdU = s.IdU INNER JOIN Illness i ON s.IdI = i.IdI WHERE u.IdU = %s",idU);
+            LazyList<Illness> illnesses = Illness.findBySQL(sqlQuerry);
+            System.out.println("Marimea Illness: " + illnesses.size());
+            for(Illness illness : illnesses){
+                System.out.println(illness);
+            }
+            /*for(Illness d:illnesses){
+                illnessArrayList.add(d);
+            }*/
+            return illnesses;
+        }catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        finally {
+            Base.close();
+        }
+    }
+
     public static String getAllBloodRequestsAndHospitalInfoForProductTypeAndGroup(InputStream requestBody) {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
             ArrayList<BloodRequestHospitalDTO> donationReceiverNameDTOArrayList = new ArrayList<>();

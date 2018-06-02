@@ -47,7 +47,7 @@ public class BaseHandler implements HttpHandler {
             String response=  PostHandler.currentReservationDC(t.getRequestBody());
             //System.out.print("Magie2"+donationCenters.size());
             if(response!=null){
-                System.out.println("MULTA MULTA MAGIE" +"\n===============\n"+response);
+
                 t.sendResponseHeaders(200,response.length());
 
             }
@@ -138,7 +138,7 @@ public class BaseHandler implements HttpHandler {
                 response=String.format("Eroare la citirea datelor trimise. Incercati din nou.");
                 t.sendResponseHeaders(422,response.length());
             }
-            System.out.println(response+" ASTA E RASPUNSUL");
+
             OutputStream os=t.getResponseBody();
             os.write(response.getBytes());
             os.close();
@@ -537,7 +537,7 @@ public class BaseHandler implements HttpHandler {
 
             if(donations.size() != 0){
                 response = new Gson().toJson(donations);
-                System.out.println(response);
+
                 t.sendResponseHeaders(200, response.length());
             }
             else{
@@ -555,7 +555,7 @@ public class BaseHandler implements HttpHandler {
             String response;
             if(donor != null){
                 response = donor.toJson(false);
-                System.out.println(response);
+
                 t.sendResponseHeaders(200, response.length());
             }
             else{
@@ -574,7 +574,7 @@ public class BaseHandler implements HttpHandler {
             String response;
             if(donors.size() != 0){
                 response = donors.toJson(true);
-                System.out.println(response);
+
                 t.sendResponseHeaders(200, response.length());
             }
             else{
@@ -655,14 +655,13 @@ public class BaseHandler implements HttpHandler {
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getDonationCenter")){
             LazyList<DonationCenter> donationCenters = GetHandler.donationCentersHandler();
             for(DonationCenter dc:donationCenters){
-                System.out.println(dc.getCenterName());
+
             }
             String response;
 
             if(donationCenters.size() != 0){
                 response=donationCenters.toJson(true);
-                System.out.println("DONATION CENTERS");
-                System.out.println(response);
+
                 t.sendResponseHeaders(200,response.length());
             }
             else {
@@ -689,7 +688,7 @@ public class BaseHandler implements HttpHandler {
             }
             else {
                 response="nop";
-                System.out.print(response);
+
                 t.sendResponseHeaders(401,response.length());
             }
             OutputStream os = t.getResponseBody();
@@ -704,8 +703,26 @@ public class BaseHandler implements HttpHandler {
 
             if(donationSchedules.size() != 0){
                 response=donationSchedules.toJson(true);
-                System.out.println("==========");
-                System.out.println(response);
+
+                t.sendResponseHeaders(200,response.length());
+            }
+            else {
+                response="nop";
+                t.sendResponseHeaders(401,response.length());
+            }
+
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getIllness")){
+            System.out.println("==========Intra Illness");
+            LazyList<Illness> illnesses = GetHandler.getAllIllnessPacient(t.getRequestBody());
+            String response;
+
+            if(illnesses.size() != 0){
+                response=illnesses.toJson(true);
                 t.sendResponseHeaders(200,response.length());
             }
             else {
@@ -724,8 +741,7 @@ public class BaseHandler implements HttpHandler {
 
             if(adresses.size() != 0){
                 response=adresses.toJson(true);
-                System.out.println("Adress");
-                System.out.println(response);
+
                 t.sendResponseHeaders(200,response.length());
             }
             else {
@@ -744,8 +760,7 @@ public class BaseHandler implements HttpHandler {
 
             if(reservations.size() != 0){
                 response=reservations.toJson(true);
-                System.out.println("Reservation");
-                System.out.println(response);
+
                 t.sendResponseHeaders(200,response.length());
             }
             else {
@@ -764,8 +779,7 @@ public class BaseHandler implements HttpHandler {
 
             if(userPacients.size() != 0){
                 response=userPacients.toJson(true);
-                System.out.println("UserPacient");
-                System.out.println(response);
+
                 t.sendResponseHeaders(200,response.length());
             }
             else {
@@ -785,8 +799,7 @@ public class BaseHandler implements HttpHandler {
 
             if(hospitals.size() != 0){
                 response=hospitals.toJson(true);
-                System.out.println("=======");
-                System.out.println(response);
+
                 t.sendResponseHeaders(200,response.length());
             }
             else {
