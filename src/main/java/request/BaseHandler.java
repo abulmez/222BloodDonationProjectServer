@@ -387,6 +387,16 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if (t.getRequestHeaders().getFirst("Content-Type").equals("application/getAdressByIdDC")){
+            String response=PostHandler.getAdressFromADonationCenter(t.getRequestBody());
+            t.sendResponseHeaders(200, response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+
+
         if (t.getRequestHeaders().getFirst("Content-Type").equals("application/diseasesChecks")){
             String response=PostHandler.diseasesChecksHandler(t.getRequestBody());
             t.sendResponseHeaders(200, response.length());
@@ -1020,6 +1030,23 @@ public class BaseHandler implements HttpHandler {
             os.close();
         }
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getUserByIdU")){
+            String response = PostHandler.getUserByIdU(t.getRequestBody());
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/getSuffersOfByIdU"))
+        {
+            String response = PostHandler.getSuffersOfByIdU(t.getRequestBody());
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
 
         if(t.getRequestHeaders().getFirst("Content-Type").equals("application/donations"))
         {
@@ -1032,7 +1059,15 @@ public class BaseHandler implements HttpHandler {
         }
 
 
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/donationReportsByIdU"))
+        {
+            String response = PostHandler.getAllDonationReportsByIdU(t.getRequestBody());
+            t.sendResponseHeaders(200,response.length());
+            OutputStream os = t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
 
+        }
 
 
 

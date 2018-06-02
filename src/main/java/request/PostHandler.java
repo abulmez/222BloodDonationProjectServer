@@ -44,7 +44,26 @@ public class PostHandler {
         }
 
     }
-
+    public static String getAllDonationReportsByIdU(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("=");
+            Integer idU = Integer.parseInt(params[1]);
+            String sql ="SELECT DR.IdDR ,DR.SamplingDate , DR.BloodStatus ,DR.BloodReport FROM Donation AS D INNER JOIN DonationReport AS DR ON D.IdD = DR.IdDR WHERE D.IdU =? ORDER BY DR.SamplingDate DESC";
+            LazyList<DonationReport> donationReports = DonationReport.findBySQL(sql,idU);
+            String transfer = donationReports.toJson(false);
+            System.out.println(transfer);
+            return transfer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
     public static String getAllDonationsForAUser(InputStream in){
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Base.open(
@@ -214,6 +233,28 @@ public class PostHandler {
         }
     }
 
+    public static String getSuffersOfByIdU(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("=");
+            Integer idU =Integer.parseInt(params[1]);
+            System.out.println(line);
+                String sql="Select * FROM SuffersOf S WHERE S.IdI < 14 AND IdU=?";
+            LazyList<SuffersOf> lazy = SuffersOf.findBySQL(sql,idU);
+            String transfer = lazy.toJson(false);
+            return transfer;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            Base.close();
+        }
+        return "";
+    }
 
     public static void addAdmin(InputStream in){
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
@@ -491,6 +532,26 @@ public class PostHandler {
             } finally {
                 Base.close();
             }
+    }
+
+    public static String getAdressFromADonationCenter(InputStream in){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("=");
+            Integer idDC = Integer.parseInt(params[1]);
+            String sql = "SELECT A.* FROM Adress AS A INNER JOIN DonationCenter AS DC ON A.IdA = DC.IdA WHERE DC.IdDC =?";
+            LazyList<Adress> adresses = Adress.findBySQL(sql,idDC);
+            String send = adresses.toJson(false);
+            return send;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
     }
 
     public static String fieldsHandler(InputStream in) {
@@ -1571,4 +1632,25 @@ public class PostHandler {
             Base.close();
         }
     }
+
+    public static String getUserByIdU(InputStream requestBody){
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(requestBody))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            String line = reader.readLine();
+            String[] params = line.split("=");
+            Integer idU = Integer.parseInt(params[1]);
+            Donor user = Donor.findFirst("IdU=?",idU);
+            String transfer = user.toJson(false);
+            System.out.println(transfer);
+            return transfer;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
 }
