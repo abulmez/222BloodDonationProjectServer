@@ -34,6 +34,10 @@ public class Main {
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             System.out.println("Connected!");
 
+
+            LazyList<SuffersOf> abc = SuffersOf.findAll();
+            System.out.println(abc.size());
+
             LazyList<Medic> d = Medic.findAll();
             System.out.println(d.size());
 
@@ -121,4 +125,5 @@ public class Main {
 
 
     }
+
 }

@@ -1,6 +1,5 @@
 package model;
 
-import com.google.gson.annotations.Expose;
 import org.javalite.activejdbc.Model;
 import org.javalite.activejdbc.annotations.IdName;
 
