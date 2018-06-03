@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
+import java.util.Objects;
 
 public class PostHandler {
 
@@ -940,6 +941,10 @@ public class PostHandler {
     }
 
     public static void addAdressHandler(InputStream in){
+        System.out.println("Incerc sa adaug");
+        System.out.println("----------------");
+        System.out.println("----------------");
+        System.out.println("-----------------");
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
             Base.open(
                     "com.microsoft.sqlserver.jdbc.SQLServerDriver",
@@ -957,15 +962,43 @@ public class PostHandler {
             String country = params[8].split("=")[1];
 
                     Adress a=new Adress();
+
                     a.setStreet(street);
                     a.setStreetNr(Integer.parseInt(streetNr));
-                    a.setBlock(Integer.parseInt(blockNr));
-                    a.setEntrance(entrance);
-                    a.setFloor(Integer.parseInt(floor));
-                    a.setApartNr(Integer.parseInt(apartNr));
+            if(blockNr == null || Objects.equals(blockNr, "null"))
+            {
+                System.out.println("BlockNr " + blockNr);
+            }
+            else{
+                a.setBlock(Integer.parseInt(blockNr));
+            }
+            if(entrance == null || Objects.equals(entrance, "null"))
+            {
+                System.out.println("Entrance " + entrance);
+            }
+            else{
+                a.setEntrance(entrance);
+
+            }
+            if(floor == null || Objects.equals(floor, "null"))
+            {
+                System.out.println("Floor " + floor);
+            }else{
+                a.setFloor(Integer.parseInt(floor));
+
+            }
+            if(apartNr == null || Objects.equals(apartNr, "null"))
+            {
+                System.out.println("ApartNR " + apartNr);
+            }else{
+                a.setApartNr(Integer.parseInt(apartNr));
+
+            }
+
                     a.setCity(city);
                     a.setCounty(county);
                     a.setCountry(country);
+                    System.out.println("-------------");
                     a.saveIt();
 
             } catch (IOException e) {
