@@ -1463,12 +1463,12 @@ public class PostHandler {
                 for(AvailableBloodProducts don : donations){
                     suma=suma+don.getQuantity();
                 }
-                if(Math.abs(suma-d.getQuantity())<=0.0000001)
+                if(Math.abs(suma-d.getQuantity())<=0.0000001 || suma-d.getQuantity()>=0.0000001)
                     continue;
                 else if(!(suma.equals(0.0)))
-                    listBD.add(new BloodDemandDTO(d,suma,"Initiata"));
+                    listBD.add(new BloodDemandDTO(d,d.getQuantity(),"Initiata"));
                 else
-                    listBD.add(new BloodDemandDTO(d,suma,"Plasata"));
+                    listBD.add(new BloodDemandDTO(d,d.getQuantity(),"Plasata"));
 
             }
 
@@ -1506,8 +1506,10 @@ public class PostHandler {
                 for(AvailableBloodProducts don : donations){
                     suma=suma+don.getQuantity();
                 }
-                if(Math.abs(suma-d.getQuantity())<=0.0000001)
-                    listBD.add(new BloodDemandDTO(d,suma,"Livrata"));
+                System.out.println(suma);
+                System.out.println(d.getQuantity());
+                if(Math.abs(suma-d.getQuantity())<=0.0000001 || suma-d.getQuantity()>=0.0000001)
+                    listBD.add(new BloodDemandDTO(d,d.getQuantity(),"Livrata"));
 
 
             }
