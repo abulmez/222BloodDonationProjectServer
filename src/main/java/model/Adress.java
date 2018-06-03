@@ -84,4 +84,5 @@ public class Adress extends Model {
     public String getCountry(){
         return (String)get("Country");
     }
+
 }

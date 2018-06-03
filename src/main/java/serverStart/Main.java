@@ -34,7 +34,8 @@ public class Main {
                     "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
             System.out.println("Connected!");
 
-
+            LazyList<Adress> a = Adress.findAll();
+            System.out.println(a.size());
             LazyList<SuffersOf> abc = SuffersOf.findAll();
             System.out.println(abc.size());
 
