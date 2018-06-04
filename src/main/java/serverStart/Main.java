@@ -8,7 +8,6 @@ import model.*;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 import org.javalite.common.JsonHelper;
-import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import request.BaseHandler;
 
 import java.lang.reflect.Type;
@@ -109,7 +108,7 @@ public class Main {
                 System.out.println(reservation);
             }
 
-            HttpServer server = HttpServer.create(new InetSocketAddress("localhost",14423), 0);
+            HttpServer server = HttpServer.create(new InetSocketAddress("192.168.1.4",14423), 0);
             //Create the context for the server.
             server.createContext("/", new BaseHandler());
             server.setExecutor(null); // creates a default executor
