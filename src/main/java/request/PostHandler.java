@@ -1154,7 +1154,6 @@ public class PostHandler {
                         ", AvailableBloodProducts WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
                         "AND BloodDemand.IdBd="+d.getIdBd());
 
-
                 for(AvailableBloodProducts don : donations){
                     suma=suma+don.getQuantity();
                 }
@@ -1194,7 +1193,7 @@ public class PostHandler {
             for(BloodDemand d:list){
                 suma=0.0;
                 List<AvailableBloodProducts> donations=AvailableBloodProducts.findBySQL("SELECT AvailableBloodProducts.* FROM BloodDemand, BloodProductsShippment" +
-                        ", AvailableBloodProducts, Donation WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
+                        ", AvailableBloodProducts WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
                         "AND BloodDemand.IdBd="+d.getIdBd());
 
 
