@@ -3,6 +3,7 @@ package request;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import model.*;
+import model.dto.BloodQuantity;
 import org.javalite.activejdbc.Base;
 import org.javalite.activejdbc.LazyList;
 
@@ -1685,4 +1686,75 @@ public class PostHandler {
         }
     }
 
+    public static List<BloodDemandDTO> findAllDemands() {
+        try{
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            Double suma;
+            BloodDemandDTO dto;
+            List<BloodDemandDTO> listBD=new ArrayList<>();
+            LazyList<BloodDemand> list=BloodDemand.findAll();
+            if(list.size()==0)
+                return null;
+            for(BloodDemand d:list){
+                suma=0.0;
+                List<AvailableBloodProducts> donations=AvailableBloodProducts.findBySQL("SELECT AvailableBloodProducts.* FROM BloodDemand, BloodProductsShippment" +
+                        ", AvailableBloodProducts WHERE BloodDemand.IdBd=BloodProductsShippment.IdBd AND BloodProductsShippment.IdBP=AvailableBloodProducts.IdBP " +
+                        " AND BloodDemand.IdBd="+d.getIdBd());
+
+
+                for(AvailableBloodProducts don : donations){
+                    suma=suma+don.getQuantity();
+                }
+                if(Math.abs(suma-d.getQuantity())<=0.0000001 || suma-d.getQuantity()>=0.0000001)
+                    listBD.add(new BloodDemandDTO(d,suma,"Livrata"));
+                else if(!(suma.equals(0.0)))
+                    listBD.add(new BloodDemandDTO(d,suma,"Initiata"));
+                else
+                    listBD.add(new BloodDemandDTO(d,suma,"Plasata"));
+
+            }
+
+            return listBD;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
+
+    public static List<BloodQuantity> findAllBloodQuantitys(InputStream in) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in))) {
+            Base.open(
+                    "com.microsoft.sqlserver.jdbc.SQLServerDriver",
+                    "jdbc:sqlserver://localhost;database=222BloodDonationProjectDB;integratedSecurity=true", "TestUser", "123456789");
+            Integer idTcp = Integer.parseInt(reader.readLine());
+            LazyList<TCP> tcps = TCP.findBySQL("select * From Users where IdU="+idTcp);
+            Integer idDC = tcps.get(0).getIdDC();
+            String sqlQuerry = String.format("SELECT abp.IdBP,abp.IdD,abp.ProductType,abp.ValidUntil,abp.Quantity FROM AvailableBloodProducts abp INNER JOIN Donation d on abp.IdD = d.IdD INNER JOIN DonationCenter dc on d.IdDC = dc.IdDC WHERE dc.IdDC = %s AND abp.Deleted = 0\n" +
+                    "AND abp.IdBP NOT IN (SELECT abp.IdBP FROM AvailableBloodProducts abp INNER JOIN  BloodProductsShippment bps ON abp.IdBP=bps.IdBP)",idDC);
+            List<BloodQuantity> bloodQuantities = new ArrayList<>();
+            LazyList<AvailableBloodProducts> products = AvailableBloodProducts.findBySQL(sqlQuerry);
+            for(AvailableBloodProducts products1:products){
+                Donation donation = Donation.findById(products1.getIdD());
+                Donor donor = Donor.findById(donation.getIdU());
+                BloodQuantity bloodQuantity = new BloodQuantity(
+                        products1.getProductType(),
+                        donor.getBloodGroup(),
+                        products1.getQuantity()
+                );
+                bloodQuantities.add(bloodQuantity);
+            }
+            return bloodQuantities;
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        } finally {
+            Base.close();
+        }
+    }
 }
