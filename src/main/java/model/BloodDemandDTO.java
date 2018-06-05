@@ -40,6 +40,16 @@ public class BloodDemandDTO {
         this.Delivered=cantitateL;
         this.Status=status;
     }
+    public BloodDemandDTO(BloodDemand bloodDemand,Double cantitate){
+        this.idBd=bloodDemand.getIdBd();
+        this.idH=bloodDemand.getIdH();
+        this.NeededType=bloodDemand.getNeededType();
+        this.Description=bloodDemand.getDescription();
+        this.Priority=bloodDemand.getPriority();
+        this.Quantity=bloodDemand.getQuantity();
+        this.BloodProductType=bloodDemand.getBloodProductType();
+        this.Delivered=cantitate;
+    }
 
 
     public Integer getIdBd() {

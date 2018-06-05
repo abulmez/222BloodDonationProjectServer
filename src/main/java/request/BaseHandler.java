@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import model.*;
+import model.dto.BloodQuantity;
 import model.dto.DonationCenterDTO;
 import org.javalite.activejdbc.LazyList;
 import utils.DonationDTO;
@@ -152,6 +153,42 @@ public class BaseHandler implements HttpHandler {
                 Gson g=new Gson();
                 response=g.toJson(list);
 
+                t.sendResponseHeaders(200,response.length());
+            }
+            else
+            {
+                response=String.format("Eroare la incarcarea tabelului");
+                t.sendResponseHeaders(422,response.length());
+            }
+            OutputStream os=t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/findBloodQuantities")){
+            List<BloodQuantity> list=PostHandler.findAllBloodQuantitys(t.getRequestBody());
+            String response;
+            if(list!=null){
+                Gson g=new Gson();
+                response=g.toJson(list);
+                t.sendResponseHeaders(200,response.length());
+            }
+            else
+            {
+                response=String.format("Eroare la incarcarea tabelului");
+                t.sendResponseHeaders(422,response.length());
+            }
+            OutputStream os=t.getResponseBody();
+            os.write(response.getBytes());
+            os.close();
+        }
+
+        if(t.getRequestHeaders().getFirst("Content-Type").equals("application/findAllBloodDemands")){
+            ;
+            List<BloodDemandDTO> bloodDemandDTOS=PostHandler.findAllDemands();
+            String response;
+            if(bloodDemandDTOS!=null && bloodDemandDTOS.size()>0){
+                Gson g=new Gson();
+                response=g.toJson(bloodDemandDTOS);
                 t.sendResponseHeaders(200,response.length());
             }
             else
